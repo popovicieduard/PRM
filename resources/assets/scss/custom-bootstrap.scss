@@ -1,0 +1,46 @@
+$default:       #f32cfb !default;
+$primary:       #9814fd !default;
+$secondary:     #F7FAFC !default;
+$success:       #2dce89 !default;
+$info:          #11cdef !default;
+$warning:       #fb6340 !default;
+$danger:        #f5365c !default;
+$upb-muted:     #909399 !default;
+
+$upb-gradient: linear-gradient(to bottom right, #9814fd 30%, #f32cfb 100%);
+.upb-primary { color: #9814fd !important};
+.upb-secondary{color: #f32cfb};
+
+.upb-bg-primary { background: #9814fd !important};
+.upb-bg-secondary{ background: #f32cfb !important};
+
+.upb-bg-gradient{
+    background: linear-gradient(to bottom right, #9814fd 30%, #f32cfb 100%);
+}
+
+.upb-gradient{
+    background: -webkit-linear-gradient(#9814fd, #f32cfb);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.bg-muted{
+    background: $upb-muted;
+    border: 1px $upb-muted solid;
+}
+
+$gray-100: #f6f9fc !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #8898aa !default;
+$gray-700: #525f7f !default;
+$gray-800: #32325d !default;
+$gray-900: #212529 !default;
+
+$font-size-base: 0.625rem !default;
+
+// All of bootstrap
+@import "node_modules/bootstrap/scss/bootstrap";
