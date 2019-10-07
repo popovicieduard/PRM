@@ -33,12 +33,14 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '@/plugins/filters/number-filter',
+    '@/plugins/filters/country-filter',
     '@/plugins/ui/element-ui',
     '@/plugins/ui/perfect-scrollbar',
-    '@/plugins/filters/number-filter.js',
-    '@/plugins/filters/country-filter.js',
-    { src:'@/plugins/ui/datatable.js', mode: 'client'},
-    { src:'@/plugins/ui/graph.js', mode: 'client'},
+    '@/plugins/ui/placeholder',
+    { src:'@/plugins/ui/apexcharts', mode: 'client'},
+    { src:'@/plugins/ui/datatable', mode: 'client'},
+    { src:'@/plugins/ui/graph', mode: 'client'},
 
   ],
   /*

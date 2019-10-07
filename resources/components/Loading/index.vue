@@ -34,7 +34,7 @@ export default {
   padding-top: 200px;
   font-size: 35px;
   font-family: sans-serif;
-  z-index: 3000;
+  z-index: 2001;
 }
 
 .circle-border {

@@ -3,7 +3,29 @@
         <div slot="header">
             <span class="h2 text-capitalize">Funnel Graph</span>
         </div>
-        <div v-loading="loading">
+        <div v-if="loading" class="my-2">
+            <content-loader
+                    :height="120"
+                    :speed="2"
+                    primaryColor="#9814fd"
+                    secondaryColor="#f32cfb"
+                >
+                <rect x="55" y="2" rx="1" ry="1" width="15" height="5" /> 
+                <rect x="50" y="12" rx="1" ry="1" width="25" height="5" />
+
+                <rect x="150" y="2" rx="1" ry="1" width="15" height="5" /> 
+                <rect x="145" y="12" rx="1" ry="1" width="25" height="5" />
+
+                <rect x="245" y="2" rx="1" ry="1" width="15" height="5" /> 
+                <rect x="240" y="12" rx="1" ry="1" width="25" height="5" />
+
+                <rect x="340" y="2" rx="1" ry="1" width="15" height="5" /> 
+                <rect x="325" y="12" rx="1" ry="1" width="45" height="5" />
+
+                <rect x="10" y="30" rx="1" ry="1" width="380" height="90" />
+            </content-loader>
+        </div>
+        <div v-else class="my-2">
             <client-only>
                 <vue-funnel-graph v-if="sum > 0 && width != ''" :width="width" :height="height" :labels="labels"
                     :values="values" :colors="colors" :direction="direction"
@@ -19,7 +41,7 @@
 <script>
 export default {
     props: {
-        stats: {
+        statistics: {
             type: Object,
             required: true
         },
@@ -36,7 +58,7 @@ export default {
               ['#f32cfb', '#9814fd'], // color set for "Impressions" segment
           ],
           values: [
-            [this.stats.spend],[this.stats.clicks],[this.stats.leads],[this.stats.conversionRate]
+            [this.statistics.spend],[this.statistics.clicks],[this.statistics.leads],[(this.statistics.leads / this.statistics.clicks * 100)]
           ],
           direction: 'horizontal',
           gradientDirection: 'horizontal',
@@ -57,6 +79,7 @@ export default {
 
 <style lang="scss">
     .funnel-graph{
+        min-height: 540px;
         .label__value{
             font-size: 1.1rem !important;
             color: #000 !important;

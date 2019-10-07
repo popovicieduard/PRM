@@ -66,7 +66,7 @@ export default {
 @import "@/assets/scss/custom-bootstrap.scss";
 
 .sidebar-menu {
-  z-index: 3001;
+  z-index: 2002;
   background-color: $secondary !important;
   min-height: 100vh;
   padding-top: 90px;

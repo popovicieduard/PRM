@@ -1,5 +1,5 @@
 <template>
-    <el-card class="transactions-table">
+    <el-card>
         <div slot="header">
             <span class="h2 text-capitalize">Transaction History</span>
         </div>

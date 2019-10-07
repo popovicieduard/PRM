@@ -30,6 +30,7 @@
     "numeral": "^2.0.6",
     "nuxt": "^2.0.0",
     "vue-apexcharts": "^1.5.0",
+    "vue-content-loader": "^0.2.2",
     "vue-filter-number-format": "^2.0.0",
     "vue-funnel-graph-js": "^0.1.6",
     "vue-router-back-button": "^1.2.3",

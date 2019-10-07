@@ -1,6 +1,6 @@
 <template>
     <div>
-    <el-card class="statistics-table" shadow="">
+    <el-card class="statistics-header" shadow="">
         <el-row>
             <el-col :xs="24" :sm="12" class="text-center text-md-left mt-2">
                 <span class="h2 text-capitalize">Statistics</span>
@@ -128,7 +128,17 @@ export default {
             },
             pickerOptions: {
                 shortcuts: [
-                    {
+                     {
+                        text: 'Today',
+                        onClick(picker) {
+                        picker.$emit('pick', [moment().startOf('day'), moment().endOf('day')]);
+                        }
+                    }, {
+                        text: 'Yesterday',
+                        onClick(picker) {
+                        picker.$emit('pick', [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')]);
+                        }
+                    }, {
                         text: 'This month',
                         onClick(picker) {
                         picker.$emit('pick', [moment().startOf('month'), moment().endOf('month')]);
@@ -143,6 +153,12 @@ export default {
             },
         }
     },
+    created(){
+        this.loading = true;
+        setTimeout(() => {
+            this.loading = false;
+        }, 2000);
+    },
     methods: {
         changeDateRange(){
             this.loading = true;
@@ -154,12 +170,15 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-    .statistics-table{
+<style lang="scss">
+    .el-loading-mask{
+        z-index: 1999 !important;
+    }
+    .statistics-header{
         position: sticky !important;
         position: -webkit-sticky !important;
         top: -20px !important;
-        z-index: 2001;
+        z-index: 2000;
 
         .upb-date-range{
             z-index: 20;

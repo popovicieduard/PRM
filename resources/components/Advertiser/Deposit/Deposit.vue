@@ -1,5 +1,5 @@
 <template>
-    <el-card class="campaign-table">
+    <el-card>
         <div slot="header">
             <el-row>
                 <el-col :span="24" class="mt-2">

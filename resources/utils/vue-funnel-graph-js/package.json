@@ -1,0 +1,97 @@
+{
+  "_from": "vue-funnel-graph-js",
+  "_id": "vue-funnel-graph-js@0.1.6",
+  "_inBundle": false,
+  "_integrity": "sha512-F9pLfD5QGgUWcaejL7d/1y9UEECgnHzukqt8omdf19DZeIKdJiRke9TaJqdiVD255vjiSewRplunb6PpEF6Ccg==",
+  "_location": "/vue-funnel-graph-js",
+  "_phantomChildren": {
+    "clone-deep": "4.0.1",
+    "loader-utils": "1.2.3",
+    "neo-async": "2.6.1"
+  },
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "vue-funnel-graph-js",
+    "name": "vue-funnel-graph-js",
+    "escapedName": "vue-funnel-graph-js",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/vue-funnel-graph-js/-/vue-funnel-graph-js-0.1.6.tgz",
+  "_shasum": "8c1f12cdb0742dff85a667d24238abbff18b601d",
+  "_spec": "vue-funnel-graph-js",
+  "_where": "E:\\Cursuri\\adonuxt",
+  "browser": {
+    "./sfc": "src/lib-components/vue-funnel-graph.vue"
+  },
+  "bugs": {
+    "url": "https://github.com/greghub/vue-funnel-graph-js/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "@tweenjs/tween.js": "^17.3.0",
+    "funnel-graph-js": "^1.3.7",
+    "node-sass": "^4.12.0",
+    "polymorph-js": "^0.2.4",
+    "sass-loader": "^7.1.0"
+  },
+  "deprecated": false,
+  "description": "![npm](https://img.shields.io/npm/v/vue-funnel-graph-js.svg) ![GitHub](https://img.shields.io/github/license/greghub/vue-funnel-graph-js.svg) ![GitHub last commit](https://img.shields.io/github/last-commit/greghub/vue-funnel-graph-js.svg) [![Gitter](https://img.shields.io/gitter/room/greghub/funnel-graph-js.svg)](https://gitter.im/funnel-graph-js/community)",
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "minimist": "^1.2.0",
+    "rollup": "^1.11.3",
+    "rollup-plugin-buble": "^0.19.6",
+    "rollup-plugin-commonjs": "^9.3.4",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-terser": "^4.0.4",
+    "rollup-plugin-uglify-es": "0.0.1",
+    "rollup-plugin-vue": "^4.6.2",
+    "vue": "^2.6.10",
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.30.0"
+  },
+  "files": [
+    "dist/*",
+    "src/*",
+    "!src/lib-dev.vue"
+  ],
+  "homepage": "https://github.com/greghub/vue-funnel-graph-js#readme",
+  "keywords": [
+    "funnel",
+    "chart",
+    "graph",
+    "funnel-chart",
+    "funnel-graph",
+    "svg-funnel-chart",
+    "svg-funnel-graph",
+    "vue",
+    "vue-funnel-graph",
+    "vue-funnel-chart",
+    "vue-graph",
+    "vue-plot",
+    "vue-funnel"
+  ],
+  "licence": "MIT",
+  "main": "dist/vue-funnel-graph.umd.js",
+  "module": "dist/vue-funnel-graph.esm.js",
+  "name": "vue-funnel-graph-js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greghub/vue-funnel-graph-js.git"
+  },
+  "scripts": {
+    "build": "npm run build:unpkg & npm run build:es & npm run build:umd",
+    "build:es": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format es --file dist/vue-funnel-graph.esm.js",
+    "build:umd": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format umd --file dist/vue-funnel-graph.umd.js",
+    "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife --file dist/vue-funnel-graph.min.js"
+  },
+  "unpkg": "dist/vue-funnel-graph.min.js",
+  "version": "0.1.6"
+}
