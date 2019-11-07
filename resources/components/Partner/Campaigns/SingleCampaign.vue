@@ -2,14 +2,8 @@
     <el-card>
         <div slot="header">
             <el-row>
-                <el-col :xs="24" :sm="12" class="mt-2">
+                <el-col :xs="24" :sm="24" class="my-1">
                     <span class="h2">Campaign - <span class="text-primary">{{ campaign.id }}</span></span>
-                </el-col>
-                <el-col :xs="24" :sm="12">
-                    <nuxt-link :to="{name: 'advertiser-campaigns-campaignId-edit', params:{campaignId: campaign.id}}"><el-button class="float-right bg-info text-white border-0" size="small">Edit Campaign</el-button></nuxt-link>
-                </el-col>
-                <el-col :span="24" class="mt-3">
-                    <el-alert v-if="campaign.tested == true" type="warning" :closable="false" :title="'The Campaign is in testing phase, in order to start the campaign a test HTTP POST callback / postback has to be made at the following URL: https://upboost.io/api/postback/' + campaign.id + '/test'"></el-alert>
                 </el-col>
             </el-row>
         </div>
@@ -25,7 +19,7 @@
                         <h1 class="text-capitalize">{{ campaign.title }}</h1>
                         <hr>
                             <el-row>
-                                <el-col :span="10" class="mt-2">
+                                <el-col :span="10" class="my-1">
                                     <span class="h4">Categories:</span>
                                 </el-col>
                                 <el-col :span="14">
@@ -34,7 +28,7 @@
                             </el-row>
                             <hr>
                             <el-row>
-                                <el-col :span="10" class="mt-2">
+                                <el-col :span="10" class="my-1">
                                     <span class="h4">Devices:</span>                                    
                                 </el-col>
                                 <el-col :span="14">
@@ -43,7 +37,7 @@
                             </el-row>
                             <hr>
                             <el-row>
-                                <el-col :span="10" class="mt-2">
+                                <el-col :span="10" class="my-1">
                                     <span class="h4">Conversion Goal:</span>                                    
                                 </el-col>
                                 <el-col :span="14">
@@ -52,7 +46,7 @@
                             </el-row>
                             <hr>
                             <el-row>
-                                <el-col :span="10" class="mt-2">
+                                <el-col :span="10" class="my-1">
                                     <span class="h4">Countries:</span>                                    
                                 </el-col>
                                 <el-col :span="14">
@@ -61,19 +55,16 @@
                             </el-row>
                             <hr>
                             <el-row>
-                                <el-col :span="10" class="mt-2">
+                                <el-col :span="10" class="my-1">
                                     <span class="h4">Landing Page</span>                               
                                 </el-col>
-                                <el-col :span="14">
-                                    <span class="font-weight-bold h4">{{ campaign.url }}</span>                                                                                                     
-                                </el-col>
-                                <el-col :span="24" class="mt-2" v-if="!checkClickId">
-                                    <el-alert show-icon :closable="false" type="warning" title="Warning: Your Landing Page URL does NOT contain the click_id parameter, make sure to add '?click_id={CLICK_ID}' to your url in order to track your conversions."></el-alert>
+                                <el-col :span="14" class="mt-1">
+                                    <span class="font-weight-bold h4"><i class="el-icon-view view-landing-page" @click="goToLanding"></i> {{ landingPageUrl }}</span>                                                                                                     
                                 </el-col>
                             </el-row>
                             <hr>
                             <el-row>
-                                <el-col :span="10" class="mt-2">
+                                <el-col :span="10" class="my-1">
                                     <span class="h4">Commision:</span>                                    
                                 </el-col>
                                 <el-col :span="14">
@@ -82,7 +73,7 @@
                             </el-row>
                             <hr>
                             <el-row>
-                                <el-col :span="10" class="mt-2">
+                                <el-col :span="10" class="my-1">
                                     <span class="h4">Daily Cap:</span>                                    
                                 </el-col>
                                 <el-col :span="14">
@@ -127,23 +118,21 @@
                     <el-col :span="24">
                         <el-card shadow="never">
                             <div slot="header">
-                                <h4 class="text-center mb-0">Postback / Callback Integration</h4>
+                                <h4 class="text-center mb-0">Tracking link</h4>
                             </div>
-                              <el-tabs value="first">
-                                <el-tab-pane label="Server to Server" name="first">
-                                    <el-alert :closable="false" class="my-2" :description="'Example: https://upboost.io/api/postback/' + campaign.id + '/example123'" title="Instructions: After the conversion, a postback / callback with the {CLICK_ID} value should be made to the url below, the request should be of type POST.">
-                                    </el-alert>
-                                    <span class="h4 text-muted">Postback / Callback URL:</span><el-input v-model="postbackUrl"></el-input>
-                                </el-tab-pane>
-                            </el-tabs>
+                            <el-button type="secondary"
+                            size="mini"
+                            class="my-1 float-right"
+                            v-clipboard:copy="trackUrl"
+                            v-clipboard:success="onCopy">
+                                Copy to Clipboard
+                            </el-button>
+                            <el-input v-model="trackUrl"></el-input>
+                            <el-alert type="info" :closable="false" class="my-2" :description="'Example: ' + trackUrl + '?s1={S1}&s2={S2}&s3={S3}&s4={S4}&s5={S5}'" title="Optional Parameters: Tracking parameters can be passed to the tracking URL for postback lead tracking, replace the {S#} with your values, (s1=tracking_value_1, s2=tracking_value_2, etc...) .">
+                            </el-alert>
                         </el-card>
                     </el-col>
                 </el-row>
-            </el-col>
-            <el-col :span="24">
-                <el-tooltip class="item" effect="dark" content="Delete Campaign" placement="left">
-                    <el-button type="danger" icon="el-icon-delete" class="float-right" circle></el-button>
-                </el-tooltip>
             </el-col>
         </el-row>
     </el-card>
@@ -159,16 +148,18 @@
             todayLeads:{
                 type: Number,
                 required: true
+            },
+            partner: {
+                type: Object,
+                required: true
             }
         },
         computed: {
-            checkClickId(){
-                if(this.campaign.url.includes("click_id={CLICK_ID}")){
-                    return true
-                }
+            trackUrl(){
+                return this.$store.getters['auth/getDomain'] + "/api/track/" +  this.partner.id + "/" + this.campaign.id
             },
-            postbackUrl(){
-                return "https://upboost.io/api/postback/" +  this.campaign.id + "/{CLICK_ID}"
+            landingPageUrl(){
+                return this.campaign.url;
             }
         },
         methods: {
@@ -179,6 +170,17 @@
                 }
                 return percentage === 100 ? 'Capped' : this.todayLeads + ' / ' + this.campaign.cap;
             },
+            onCopy: function (e) {
+                this.$message({
+                    message: 'Link copied to clipboard',
+                    center: true,
+                    showClose: true,
+                    duration: 2000,
+                });
+            },
+            goToLanding(){
+                window.open(this.landingPageUrl, '_blank');
+            }
         },
     }
 </script>
@@ -193,6 +195,10 @@
 
     .el-progress__text{
         font-size: 12px !important;
+    }
+
+    .view-landing-page{
+        cursor: pointer;
     }
 
 </style>

@@ -57,7 +57,7 @@ export default {
                 this.date = date;
                 this.dateKey = date[1] / date[0];
                 this.statistics = {
-                    profit: 50,
+                    earnings: 50,
                     clicks: 30,
                     leads: 2,
                 }

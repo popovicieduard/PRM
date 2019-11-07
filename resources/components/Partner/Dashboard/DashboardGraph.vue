@@ -51,7 +51,7 @@ export default {
           data: [11, 32, 45, 32, 34, 52, 41, 32, 32, 25, 61, 2,]
         },
         {
-          name: "Profit",
+          name: "Earnings",
           data: [61, 12, 85, 62, 44, 22.22, 11,32, 45, 56, 32, 6,]
         },
 
@@ -117,7 +117,7 @@ export default {
               {
                 formatter: function (y) {
                   if(typeof y !== "undefined") {
-                    return  y.toFixed(0);
+                    return  y.toLocaleString();
                   }
                   return y;
                   
@@ -125,7 +125,7 @@ export default {
               }, {
                 formatter: function (y) {
                   if(typeof y !== "undefined") {
-                    return  y.toFixed(0);
+                    return  y.toLocaleString();
                   }
                   return y;
                   
@@ -133,7 +133,7 @@ export default {
               }, {
                 formatter: function (y) {
                   if(typeof y !== "undefined") {
-                    return  y + " $";
+                    return  y.toLocaleString() + " $";
                   }
                   return y;
                   
@@ -150,11 +150,11 @@ export default {
     this.width = element.offsetWidth - 30;
   },
   methods: {
-    graphDateRange(startDate, stopDate) {
+    graphDateRange(startDate, endDate) {
       var dateArray = [];
       var currentDate = moment(startDate);
-      var stopDate = moment(stopDate);
-      while (currentDate <= stopDate) {
+      var endDate = moment(endDate);
+      while (currentDate <= endDate) {
           dateArray.push( moment(currentDate).format('DD MMM') )
           currentDate = moment(currentDate).add(1, 'days');
       }

@@ -2,7 +2,7 @@
     <div>
     <el-card class="statistics-header" shadow="">
         <el-row>
-            <el-col :xs="24" :sm="12" class="text-center text-md-left mt-2">
+            <el-col :xs="24" :sm="12" class="text-center text-md-left my-1">
                 <span class="h2 text-capitalize">Statistics</span>
             </el-col>
             <el-col :xs="24" :sm="12" class="text-center text-md-right upb-date-range">
@@ -26,46 +26,25 @@
         </div>
         <el-table-wrapper v-loading="loading" :data="leadTableData" :columns="leadColumns" :pagination="pagination">
             <template slot-scope="scope" slot="lead-id-slot">
-                <router-link :to="{name: 'advertiser-statistics-lead-leadId', params: {leadId: scope.row.id}}" class="text-capitalize">
-                    {{ scope.row.id }}
-                </router-link>
-            </template>
-            <template slot-scope="scope" slot="partner-id-slot">
-                <router-link :to="{name: 'advertiser-statistics-partner-partnerId', params: {partnerId: scope.row.partner_id}}" class="text-capitalize">
-                    {{ scope.row.partner_id }}
-                </router-link>
+                {{ scope.row.id }}
             </template>
             <template slot-scope="scope" slot="campaign-name-slot">
-                <router-link :to="{name: 'advertiser-statistics-campaign-campaignId', params: {campaignId: scope.row.campaign_id}}" class="text-capitalize">
-                    {{ scope.row.campaign_name.length > 30 ? scope.row.campaign_id + ' / ' + scope.row.campaign_name.substring(0, 30) + '...' : scope.row.campaign_id + ' / ' + scope.row.campaign_name }}
-                </router-link>
+                {{ scope.row.campaign_name.length > 30 ? scope.row.campaign_id + ' / ' + scope.row.campaign_name.substring(0, 30) + '...' : scope.row.campaign_id + ' / ' + scope.row.campaign_name }}
             </template>
-            <template slot-scope="scope" slot="cost-slot">
+            <template slot-scope="scope" slot="earnings-slot">
                 <span class="text-success font-weight-bold">{{ scope.row.cost | numFormat('0,0.00') }} $</span>
+            </template>
+            <template slot-scope="scope" slot="country-slot">
+                    <country-flag :country='scope.row.country' size='small'/>
+                    {{ scope.row.country | country() }}
+            </template>
+            <template slot-scope="scope" slot="device-slot">
+                <el-tag size="small">
+                    <span class="font-weight-bold text-capitalize">{{ scope.row.device }}</span>
+                </el-tag>
             </template>
             <template slot-scope="scope" slot="active-slot">
                 <el-tag effect="dark" size="mini" :type="scope.row.active ? 'success' : 'danger' " class="text-capitalize">{{ scope.row.active ? 'active' : 'cancelled' }}</el-tag>
-            </template>
-        </el-table-wrapper>
-    </el-card>
-    <el-card class="my-3" shadow="">
-        <div slot="header">
-            <h2>Partners</h2>
-        </div>
-        <el-table-wrapper v-loading="loading" :data="partnersTableData" :columns="partnersColumns" :pagination="pagination">
-            <template slot-scope="scope" slot="partner-id-slot">
-                <router-link :to="{name: 'advertiser-statistics-partner-partnerId', params: {partnerId: scope.row.id}}" class="text-capitalize">
-                    {{ scope.row.id }}
-                </router-link>
-            </template>
-            <template slot-scope="scope" slot="clicks-slot">
-                <span>{{ scope.row.clicks | numFormat('0,0') }}</span>
-            </template>
-            <template slot-scope="scope" slot="leads-slot">
-                <span>{{ scope.row.leads | numFormat('0,0') }}</span>
-            </template>
-            <template slot-scope="scope" slot="cost-slot">
-                <span class="text-success font-weight-bold">{{ scope.row.cost | numFormat('0,0.00') }} $</span>
             </template>
         </el-table-wrapper>
     </el-card>
@@ -81,10 +60,6 @@ export default {
             type: Array,
             required: true
         },
-        partners: {
-            type: Array,
-            required: true
-        },
     },
     data() {
         return {
@@ -95,31 +70,17 @@ export default {
                 {
                     prop: 'id', label: 'Lead ID', wdith: 100, scopedSlot: 'lead-id-slot'
                 }, {
-                    prop: 'click_id', label: 'Click ID',
-                }, {
-                    prop: 'partner_id', label: 'Partner ID', scopedSlot: 'partner-id-slot',
-                }, {
                     prop: 'campaign_name', label: 'Campaign ID / Name', width: 280, scopedSlot: 'campaign-name-slot' ,
                 }, {
-                    prop: 'cost', label: 'Cost', width: 80, scopedSlot: 'cost-slot',
+                    prop: 'cost', label: 'Earnings', scopedSlot: 'earnings-slot',
                 }, {
-                    prop: 'ip_address', label: 'IP', width: 120
+                    prop: 'country', label: 'Country', scopedSlot: 'country-slot',
+                }, {
+                    prop: 'Device', label: 'Device', scopedSlot: 'device-slot',
                 }, {
                     prop: 'created_at', label: 'Date', width: 180, sortable: true,
                 }, {
                     prop: 'active', label: 'Status', width: 100, scopedSlot: 'active-slot', sortable: true,
-                },
-            ],
-            partnersTableData: this.partners,
-            partnersColumns: [
-                {
-                    prop: 'id', label: 'Partner ID', scopedSlot: 'partner-id-slot', sortable: true,
-                }, {
-                    prop: 'clicks', label: 'Clicks', scopedSlot: 'clicks-slot', sortable: true,
-                }, {
-                    prop: 'leads', label: 'Leads', scopedSlot: 'leads-slot', sortable: true,
-                }, {
-                    prop: 'cost', label: 'Cost', width: 140,  scopedSlot: 'cost-slot', sortable: true,
                 },
             ],
             pagination: {
@@ -171,6 +132,9 @@ export default {
 </script>
 
 <style lang="scss">
+    .flag{
+        height: 58px !important;
+    }
     .el-loading-mask{
         z-index: 1999 !important;
     }

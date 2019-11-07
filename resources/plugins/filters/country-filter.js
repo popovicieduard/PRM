@@ -249,11 +249,11 @@ var isoCountries = {
 };
 
 const countryFilter = value => {
-  return getCountryName(value.toUpperCase());
+  return getCountryName(value);
 };
 
 function getCountryName (countryCode) {
-    if (isoCountries.hasOwnProperty(countryCode)) {
+    if (isoCountries.hasOwnProperty(countryCode.toUpperCase())) {
         return isoCountries[countryCode];
     } else {
         return countryCode;

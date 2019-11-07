@@ -2,10 +2,10 @@
     <div>
         <el-card class="statistics-header" shadow="">
             <el-row>
-                <el-col :xs="24" :sm="8" class="text-center text-md-left mt-2">
+                <el-col :xs="24" :sm="8" class="text-center text-md-left my-1">
                     <span class="h2 text-capitalize">Partner - {{ partner_id }} - Statistics</span>
                 </el-col>
-                <el-col :xs="24" :sm="8" class="text-center text-md-right mt-2 pr-4">
+                <el-col :xs="24" :sm="8" class="text-center text-md-right my-1 pr-4">
                     <el-tooltip :content="this.partner_status ? 'Allow Partner to generate leads' : 'Block Partner from generating leads'" placement="left" effect="dark">
                         <el-switch
                             :value="!partner_status"

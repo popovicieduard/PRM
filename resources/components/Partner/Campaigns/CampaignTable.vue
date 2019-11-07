@@ -1,54 +1,92 @@
 <template>
-    <el-card class="campaign-table">
-        <div slot="header">
-            <el-row>
-                <el-col :xs="24" :sm="12" class="text-center text-md-left mt-2">
-                    <span class="h2 text-capitalize">Campaigns</span>
-                </el-col>
-                <el-col :xs="24" :sm="12" class="text-center text-md-right">
-                    <router-link :to="{name: 'advertiser-campaigns-add' }" tag="button" class="el-button el-button--small upb-bg-primary text-white float-right border-0"><i class="el-icon-circle-plus-outline"></i> Add</router-link>
-                </el-col>
-            </el-row>
-        </div>
-        <el-row :gutter="12">
-            <el-col :span="24">
-                <el-table-wrapper v-loading="loading" :data="tableData" :columns="columns" :pagination="pagination">
-                    <template slot-scope="scope" slot="clicks-slot">
-                        <span>{{ scope.row.clicks | numFormat('0,0') }}</span>
-                    </template>
-                    <template slot-scope="scope" slot="leads-slot">
-                        <span>{{ scope.row.leads | numFormat('0,0') }}</span>
-                    </template>
-                    <template slot-scope="scope" slot="spend-slot">
-                        <span class="text-success font-weight-bold">{{ scope.row.spend | numFormat('0,0.00') }} $</span>
-                    </template>
-                    <template slot-scope="scope" slot="name-slot">
-                        <router-link :to="{name: 'advertiser-campaigns-campaignId', params: {campaignId: scope.row.id}}" class="text-capitalize" v-if="!scope.row.removed">
-                            {{ scope.row.name.length > 30 ? scope.row.name.substring(0, 30) + '...' : scope.row.name }}
-                        </router-link>
-                        <span v-else class="text-capitalize">
-                            {{ scope.row.name }}
-                        </span>
-                    </template>
-                    <template slot-scope="scope" slot="active-slot">
-                        <el-tag effect="dark" size="mini" :type="scope.row.removed ? 'danger' : (scope.row.active ? 'success' : '')" :class="{ 'bg-muted': !scope.row.active, 'text-capitalize': true }">{{ scope.row.removed ? 'removed' : (scope.row.active ? 'live' : 'paused') }}</el-tag>
-                    </template>
-                    <template slot-scope="scope" slot="status-slot"> 
-                        <el-tooltip content="Start / Pause Campaign" placement="left" class="float-right" v-if="scope.row.tested && !scope.row.removed">
-                            <el-switch
-                                :value="scope.row.active"
-                                active-color="#2dce89"
-                                @change="changeCampaignActiveStatus(scope.row.id)">
-                            </el-switch>
-                        </el-tooltip>
-                    </template>
-                </el-table-wrapper>
-            </el-col>
-        </el-row>
-    </el-card>
+    <el-row :gutter="12">
+        <el-col :span="5" class="filter-card">
+            <el-card>
+                <div slot="header">
+                    <el-row>
+                        <el-col :span="12">
+                            <h2 class="text-capitalize my-1">Filter</h2>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-button type="primary" class="float-right" size="mini" @click="filterCampaigns">Filter</el-button>
+                        </el-col>
+                    </el-row>
+                </div>
+                <el-input placeholder="Search by Name" v-model="filter.search">
+                    <i slot="suffix" class="el-input__icon el-icon-search"></i>
+                </el-input>
+                <hr>
+                <h4>Countries</h4>
+                <el-select
+                v-model="filter.countries"
+                filterable
+                multiple
+                collapse-tags
+                placeholder="Select Countries"
+                >
+                    <el-option
+                        v-for="country in countries"
+                        :key="country.value"
+                        :label="country.label"
+                        :value="country.value"
+                    ></el-option>
+                </el-select>
+                <hr>
+                <h4>Categories</h4>
+                <el-select
+                v-model="filter.categories"
+                filterable
+                multiple
+                collapse-tags
+                placeholder="Select Categories"
+                >
+                    <el-option
+                        v-for="category in categories"
+                        :key="category.value"
+                        :label="category.label"
+                        :value="category.value"
+                    ></el-option>
+                </el-select>
+            </el-card>
+        </el-col>
+        <el-col :span="19">
+            <el-card class="campaign-table">
+                <div slot="header">
+                    <el-row>
+                        <el-col :xs="24" class="text-center text-md-left my-1">
+                            <span class="h2 text-capitalize">Campaigns</span>
+                        </el-col>
+                    </el-row>
+                </div>
+                <el-row :gutter="12">
+                    <el-col :span="24">
+                        <el-table-wrapper v-loading="loading" :data="tableData" :columns="columns" :pagination="pagination">
+                            <template slot-scope="scope" slot="name-slot">
+                                <router-link :to="{name: 'partner-campaigns-campaignId', params: {campaignId: scope.row.id}}" class="text-capitalize">
+                                    {{ scope.row.name.length > 30 ? scope.row.name.substring(0, 30) + '...' : scope.row.name }}
+                                </router-link>
+                            </template>
+                            <template slot-scope="scope" slot="conversion_goal-slot">
+                                <el-tag effect="dark" size="mini" type="primary" class="text-capitalize">{{ scope.row.conversion_goal }}</el-tag>
+                            </template>
+                            <template slot-scope="scope" slot="rate-slot">
+                                <span class="text-success font-weight-bold">{{ scope.row.rate | numFormat('0,0.00') }} $</span>
+                            </template>
+                            <template slot-scope="scope" slot="epc-slot">
+                                <span>{{ scope.row.epc | numFormat('0,0.00') }}</span>
+                            </template>
+                        </el-table-wrapper>
+                    </el-col>
+                </el-row>
+            </el-card>
+        </el-col>
+    </el-row>
 </template>
 
 <script>
+import CountrySelect from '@/components/utils/CountrySelect';
+import CampaignCategories from '@/components/utils/CampaignCategories';
+
 export default {
     props: {
         campaigns: {
@@ -58,68 +96,66 @@ export default {
     },
     data() {
         return {
-            loading: false,
+            countries: CountrySelect.data,
+            categories: CampaignCategories.data,
             tableData: this.campaigns,
+            filter: {
+                search: '',
+                countries: [],
+                categories: [],
+            },
+            loading: false,
             columns: [
                 {
                     prop: 'id', label: 'Campaign ID', width: 130
                 }, {
-                    prop: 'name', label: 'Name', scopedSlot: 'name-slot'
+                    prop: 'name', label: 'Name',  width: 280, scopedSlot: 'name-slot'
                 }, {
-                    prop: 'clicks', label: 'Clicks', width: 140, scopedSlot: 'clicks-slot'
+                    prop: 'conversion_goal', label: 'Conversion Goal', scopedSlot: 'conversion_goal-slot'
                 }, {
-                    prop: 'leads', label: 'Leads', width: 140, scopedSlot: 'leads-slot'
+                    prop: 'rate', label: 'Rate', width: 140, scopedSlot: 'rate-slot', sortable: true,
                 }, {
-                    prop: 'spend', label: 'Spend',  scopedSlot: 'spend-slot', width: 140
-                }, {
-                    prop: 'active', label: 'Status',  scopedSlot: 'active-slot', width: 140
-                }, {
-                    prop: 'tested', label: '', width: 1
-                }, {
-                    prop: 'status', label: '', width: 60, scopedSlot: 'status-slot'
-                }
+                    prop: 'epc', label: 'EPC', width: 100, scopedSlot: 'epc-slot', sortable: true,
+                }, 
                 
             ],
             pagination: {
-                pageSize: 5,
+                pageSize: 20,
                 layout: ' prev, pager, next',
             },
         }
     },
-    created(){
-        this.loading = true;
-        setTimeout(() => {
-            this.loading = false;
-        }, 2000);
-    },
+
     methods: {
-        getCampaignActiveStatus(id){
-            return this.campaigns.find(campaign => campaign.id === id).active;
+        filterCampaigns(){
+            this.tableData = this.filterByCategory(this.filtereByCountry(this.filterBySearch(this.campaigns, this.filter.search), this.filter.countries), this.filter.categories)
         },
-        setCampaignActiveStatus(id, payLoad){
-            return this.campaigns.find(campaign => campaign.id === id).active = payLoad;
+        filterBySearch(campaigns, keyword){
+            const search = keyword.trim();
+            if(!search.length) return campaigns;
+            return campaigns.filter(campaign => campaign.name.toLowerCase().indexOf(search.toLowerCase()) > -1);
         },
-        changeCampaignActiveStatus(id){
-            this.loading = true;
-
-            var campaignStatus = this.getCampaignActiveStatus(id)
-
-            var campaignStatusMessage = campaignStatus ? 'Campaign has been paused' : "Campaign has been started";
-            var campaginStatusType = campaignStatus ? 'info' : 'success';
-
-            setTimeout(() => {
-                this.setCampaignActiveStatus(id, !campaignStatus)
-                this.$notify({
-                    message: campaignStatusMessage,
-                    type: campaginStatusType
-                });
-                this.loading = false;
-            }, 1000)
+        filterByCategory(campaigns, categories){
+            if(!categories.length) return campaigns;
+            return campaigns.filter(campaign => campaign.categories.find(category => categories.includes(category)))
         },
-    },
+        filtereByCountry(campaigns, countries){
+            if(!countries.length) return campaigns;
+            return campaigns.filter(campaign => campaign.countries.find(country => countries.includes(country)));
+        }
+    }
 }
 </script>
 
 <style lang="scss">
+    .filter-card{
+        position: sticky !important;
+        position: -webkit-sticky !important;
+        top: -20px !important;
+        z-index: 2000;
 
+        .upb-date-range{
+            z-index: 20;
+        }
+    }
 </style>

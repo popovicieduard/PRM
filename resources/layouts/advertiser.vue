@@ -1,6 +1,6 @@
 <template>
   <el-container min-height="100vh">
-    <el-aside width="15vw" height="100%">
+    <el-aside width="13vw" height="100%">
       <SideNav />
     </el-aside>
     <el-container class="main-container">
@@ -33,7 +33,6 @@ export default {
 @import "@/assets/scss/custom-bootstrap.scss";
 
 .el-aside {
-  width: 15vw;
   height: 100%;
 }
 
@@ -42,7 +41,7 @@ export default {
   max-height: 100vh;
 
   ::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
   }
 
   /* Track */

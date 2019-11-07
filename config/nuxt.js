@@ -35,9 +35,11 @@ module.exports = {
   plugins: [
     '@/plugins/filters/number-filter',
     '@/plugins/filters/country-filter',
+    '@/plugins/ui/country-flags',
     '@/plugins/ui/element-ui',
     '@/plugins/ui/perfect-scrollbar',
     '@/plugins/ui/placeholder',
+    '@/plugins/ui/clipboard',
     { src:'@/plugins/ui/apexcharts', mode: 'client'},
     { src:'@/plugins/ui/datatable', mode: 'client'},
     { src:'@/plugins/ui/graph', mode: 'client'},

@@ -2,10 +2,10 @@
     <el-card>
         <div slot="header">
             <el-row>
-                <el-col :span="12" class="mt-2">
+                <el-col :span="12" class="my-1">
                     <h2>Lead - {{ lead.id }}</h2>
                 </el-col>
-                <el-col :span="12" class="mt-2">
+                <el-col :span="12" class="my-1">
                     <el-tooltip :content="'Cancel / Activate Lead - ' + lead.id" placement="left" class="float-right">
                         <el-switch
                             :value="lead.active"

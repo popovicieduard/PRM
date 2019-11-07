@@ -46,9 +46,8 @@
                     
                 ],
                 pagination: {
-                    pageSize: 5,
+                    pageSize: 10,
                     layout: ' prev, pager, next',
-                    // pageSizes: [5, 10, 50, 100],
                 },
             }
         },

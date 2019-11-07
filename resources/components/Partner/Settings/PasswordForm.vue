@@ -2,7 +2,7 @@
     <el-card>
         <div slot="header">
             <el-row>
-                <el-col :span="24" class="mt-2">
+                <el-col :span="24" class="my-1">
                     <span class="h2 text-capitalize">Change Password</span>
                 </el-col>
             </el-row>

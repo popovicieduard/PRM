@@ -2,7 +2,7 @@
     <el-card>
         <div slot="header">
             <el-row>
-                <el-col :xs="24" :sm="12" class="text-center text-md-left mt-2">
+                <el-col :xs="24" :sm="12" class="text-center text-md-left my-1">
                     <span class="h2 text-capitalize">Dashboard</span>
                 </el-col>
                 <el-col :xs="24" :sm="12" class="text-center text-md-right">

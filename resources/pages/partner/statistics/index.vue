@@ -2,14 +2,14 @@
     <el-row>
         <el-col :span="24" class="mb-1">
             <client-only>
-                <StatisticsTable :leads="leads" :partners="partners"/>
+                <StatisticsTable :leads="leads"/>
             </client-only>
         </el-col>
     </el-row>
 </template>
 
 <script>
-import StatisticsTable from '@/components/Advertiser/Statistics/StatisticsTable';
+import StatisticsTable from '@/components/Partner/Statistics/StatisticsTable';
 import moment from 'moment';
 
 export default {
@@ -29,6 +29,8 @@ export default {
                     cost: 52,
                     created_at: moment().format('DD MMM YYYY - HH:mm:ss'),
                     ip_address: '92.523.32.512',
+                    device: 'mobile',
+                    country: 'RO',
                     active: true
                 },                 {
                     id: 50,
@@ -39,6 +41,8 @@ export default {
                     cost: 52,
                     created_at: moment().format('DD MMM YYYY - HH:mm:ss'),
                     ip_address: '92.523.32.512',
+                                        device: 'mobile',
+                    country: 'RO',
                     active: true
                 },                {
                     id: 50,
@@ -48,7 +52,8 @@ export default {
                     campaign_id: 42,
                     cost: 52,
                     created_at: moment().format('DD MMM YYYY - HH:mm:ss'),
-                    ip_address: '92.523.32.512',
+                    ip_address: '92.523.32.512',                    device: 'mobile',
+                    country: 'RO',
                     active: true
                 },                {
                     id: 50,
@@ -58,7 +63,8 @@ export default {
                     campaign_id: 42,
                     cost: 52,
                     created_at: moment().format('DD MMM YYYY - HH:mm:ss'),
-                    ip_address: '92.523.32.512',
+                    ip_address: '92.523.32.512',                    device: 'mobile',
+                    country: 'RO',
                     active: true
                 },                {
                     id: 50,
@@ -68,7 +74,8 @@ export default {
                     campaign_id: 42,
                     cost: 52,
                     created_at: moment().format('DD MMM YYYY - HH:mm:ss'),
-                    ip_address: '92.523.32.512',
+                    ip_address: '92.523.32.512',                    device: 'mobile',
+                    country: 'RO',
                     active: true
                 },                {
                     id: 50,
@@ -78,7 +85,8 @@ export default {
                     campaign_id: 42,
                     cost: 52,
                     created_at: moment().format('DD MMM YYYY - HH:mm:ss'),
-                    ip_address: '92.523.32.512',
+                    ip_address: '92.523.32.512',                    device: 'mobile',
+                    country: 'RO',
                     active: true
                 },                {
                     id: 50,
@@ -88,7 +96,8 @@ export default {
                     campaign_id: 42,
                     cost: 52,
                     created_at: moment().format('DD MMM YYYY - HH:mm:ss'),
-                    ip_address: '92.523.32.512',
+                    ip_address: '92.523.32.512',                    device: 'mobile',
+                    country: 'RO',
                     active: true
                 },                {
                     id: 50,
@@ -98,54 +107,11 @@ export default {
                     campaign_id: 42,
                     cost: 52,
                     created_at: moment().format('DD MMM YYYY - HH:mm:ss'),
-                    ip_address: '92.523.32.512',
+                    ip_address: '92.523.32.512',                    device: 'mobile',
+                    country: 'RO',
                     active: true
                 },
             ],
-            partners: [
-                {
-                    id: 32,
-                    clicks: 321312,
-                    leads: 321,
-                    cost: 42132,
-                },
-                                {
-                    id: 32,
-                    clicks: 321312,
-                    leads: 321,
-                    cost: 4213,
-                },
-                                {
-                    id: 32,
-                    clicks: 321312,
-                    leads: 321,
-                    cost: 4213,
-                },
-                                {
-                    id: 32,
-                    clicks: 321312,
-                    leads: 3212,
-                    cost: 4213,
-                },
-                                {
-                    id: 32,
-                    clicks: 321312,
-                    leads: 321,
-                    cost: 4213,
-                },
-                                {
-                    id: 32,
-                    clicks: 321312,
-                    leads: 321,
-                    cost: 4213,
-                },
-                                {
-                    id: 32,
-                    clicks: 321312,
-                    leads: 321,
-                    cost: 4213,
-                },
-            ]
         }
     }
     

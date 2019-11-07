@@ -2,7 +2,7 @@
     <el-card>
         <div slot="header">
             <el-row>
-                <el-col :xs="24" :sm="12" class="text-center text-md-left mt-2">
+                <el-col :xs="24" :sm="12" class="text-center text-md-left my-1">
                     <span class="h2 text-capitalize">Dashboard</span>
                 </el-col>
                 <el-col :xs="24" :sm="12" class="text-center text-md-right">
@@ -59,8 +59,8 @@
                         <el-card shadow="hover">
                             <el-row>
                                 <el-col :span="18">
-                                    <h5 class="card-row__title">Profit</h5>
-                                    <h3 class="card-row__numbers text-success">{{ statistics.profit | numFormat('0,0.00') }} USD</h3>
+                                    <h5 class="card-row__title">Earnings</h5>
+                                    <h3 class="card-row__numbers text-success">{{ statistics.earnings | numFormat('0,0.00') }} USD</h3>
                                 </el-col>
                                 <el-col :span="6" class="text-center">
                                     <i class="icon-spend"></i>
@@ -170,7 +170,6 @@ export default {
     methods: {
         changeDateRange(event){
             var dateRange = event;
-            console.log(event)
             if(event){
                 this.$emit('loading')
                 this.$emit('changeDate', dateRange)

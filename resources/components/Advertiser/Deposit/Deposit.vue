@@ -2,13 +2,13 @@
     <el-card>
         <div slot="header">
             <el-row>
-                <el-col :span="24" class="mt-2">
+                <el-col :span="24" class="my-1">
                     <span class="h2 text-capitalize">Deposit</span>
                 </el-col>
             </el-row>
         </div>
         <el-row>
-            <el-col :span="12" class="mt-2">
+            <el-col :span="12" class="my-1">
                 <h2 class="">Balance: <span class="text-success">{{ balance | numFormat('0,0.00') }} $</span></h2>
             </el-col>
             <el-col :span="12">

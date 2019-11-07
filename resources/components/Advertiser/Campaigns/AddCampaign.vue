@@ -59,7 +59,7 @@
                 <el-form-item label="Conversion Goal">
                   <el-select v-model="campaign.conversion_goal" placeholder="Pick a conversion goal">
                     <el-option label="Complete Survey" value="survey"></el-option>
-                    <el-option label="Sign up" value="sign-up"></el-option>
+                    <el-option label="Sign-up" value="sign-up"></el-option>
                     <el-option label="Purchase" value="purchase"></el-option>
                   </el-select>
                 </el-form-item>
@@ -80,15 +80,9 @@
                 </el-form-item>
                 <el-form-item label="Landing Page">
                   <el-input
-                    placeholder="https://landing.com/?click_id={CLICK_ID}"
-                    @blur="validateUrl()"
+                    placeholder="https://landing.com/"
                     v-model="campaign.url"
                   ></el-input>
-                  <el-card type="warning" class="my-3">
-                    <h4
-                      class="instructions my-1"
-                    ><span class="text-warning">IMPORTANT:</span> Your URL must include the click_id parameter, as it's required to track conversions. You will have to save the click_id value in a session or cookie and generate a postback with that click_id value after the conversion. After the Campaign is created the postback url will be accesible from the campaign page.</h4>
-                  </el-card>
                 </el-form-item>
                 <el-form-item>
                 </el-form-item>
@@ -163,7 +157,7 @@ export default {
         description: "",
         instructions: "",
         image: "",
-        conversionGoal: "",
+        conversion_goal: "",
         categories: [],
         url: "",
         countries: [],
@@ -179,12 +173,6 @@ export default {
   methods: {
     onSubmit() {
       console.log(this.campaign);
-    },
-    validateUrl() {
-      let regex = /^(http|https)/;
-      if (this.campaign.url.length >= 4 && !this.campaign.url.match(regex)) {
-        this.campaign.url = "https://" + this.campaign.url;
-      }
     },
     nextStep(){
       this.steps++;

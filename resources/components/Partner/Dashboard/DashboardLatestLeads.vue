@@ -2,14 +2,14 @@
     <el-card class="latest-leads">
         <div slot="header">
             <span class="h2 text-capitalize">Latest leads</span>            
-            <router-link :to="{name: 'advertiser-statistics' }" tag="button" class="el-button el-button--mini btn-primary text-white float-right border-0">See All</router-link>
+            <router-link :to="{name: 'partner-statistics' }" tag="button" class="el-button el-button--mini btn-primary text-white float-right border-0">See All</router-link>
         </div>
         <el-row :gutter="12">
             <el-col :span="24">
                 <client-only>
                     <el-table-wrapper :data="tableData" :columns="columns" :pagination="pagination">
-                    <template slot-scope="scope" slot="cost-slot">
-                        <span class="text-success font-weight-bold">{{ scope.row.cost }} $</span>
+                    <template slot-scope="scope" slot="earnings-slot">
+                        <span class="text-success font-weight-bold">{{ scope.row.earnings }} $</span>
                     </template>
                     </el-table-wrapper>
                 </client-only>
@@ -23,13 +23,13 @@
         data() {
             return {
                 tableData: [
-                    // {
-                    //     clickId: 231231,
-                    //     date: 2018,
-                    //     partnerId: 52,
-                    //     campaign: 'test',
-                    //     cost: 50
-                    // }
+                    {
+                        clickId: 231231,
+                        date: 2018,
+                        partnerId: 52,
+                        campaign: 'test',
+                        earnings: 50
+                    }
                 ],
                 columns: [
                     {
@@ -39,14 +39,13 @@
                     }, {
                         prop: 'campaign', label: 'Campaign'
                     }, {
-                        prop: 'cost', label: 'Profit', width: 90, scopedSlot: 'cost-slot'
+                        prop: 'earnings', label: 'Earnings', width: 90, scopedSlot: 'earnings-slot'
                     },
                     
                 ],
                 pagination: {
-                    pageSize: 5,
+                    pageSize: 10,
                     layout: ' prev, pager, next',
-                    // pageSizes: [5, 10, 50, 100],
                 },
             }
         },

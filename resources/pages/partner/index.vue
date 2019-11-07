@@ -14,7 +14,6 @@ import DashboardStatistics from '@/components/Partner/Dashboard/DashboardStatist
 import DashboardLatestLeads from '@/components/Partner/Dashboard/DashboardLatestLeads';
 
 export default {
-    scrollToTop: true,
     components: {
         DashboardStatistics,
         DashboardLatestLeads,
@@ -24,7 +23,7 @@ export default {
             stats:{
                 clicks: 50,
                 leads: 5,
-                profit: 20,
+                earnings: 20,
             }
         }
     },

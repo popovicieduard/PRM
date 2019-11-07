@@ -2,7 +2,7 @@
     <el-card class="campaign-table">
         <div slot="header">
             <el-row>
-                <el-col :xs="24" :sm="12" class="text-center text-md-left mt-2">
+                <el-col :xs="24" :sm="12" class="text-center text-md-left my-1">
                     <span class="h2 text-capitalize">Campaigns</span>
                 </el-col>
                 <el-col :xs="24" :sm="12" class="text-center text-md-right">
@@ -81,7 +81,7 @@ export default {
                 
             ],
             pagination: {
-                pageSize: 5,
+                pageSize: 10,
                 layout: ' prev, pager, next',
             },
         }

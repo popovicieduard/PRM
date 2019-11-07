@@ -40,7 +40,7 @@ export default {
                 
             ],
             pagination: {
-                pageSize: 5,
+                pageSize: 10,
                 layout: ' prev, pager, next',
             },
         }
