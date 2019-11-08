@@ -30,7 +30,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/assets/scss/custom-bootstrap.scss";
+@import "@/assets/scss/_variables.scss";
 
 .el-aside {
   height: 100%;

@@ -48,7 +48,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/custom-bootstrap.scss';
+@import '@/assets/scss/_variables.scss';
 
 .header-menu{
     background-color: $secondary !important;
