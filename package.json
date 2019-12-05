@@ -31,6 +31,7 @@
     "flag-icon-css": "^3.4.2",
     "numeral": "^2.0.6",
     "nuxt": "^2.0.0",
+    "upb-funnel-graph": "^1.0.0",
     "vue-apexcharts": "^1.5.0",
     "vue-clipboard2": "^0.3.1",
     "vue-content-loader": "^0.2.2",

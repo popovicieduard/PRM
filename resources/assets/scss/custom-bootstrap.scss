@@ -24,9 +24,9 @@
 
 $font-size-base: 0.625rem !default;
 
-.el-button{
+.lh-0{
     line-height: 0;
 }
 
 // All of bootstrap
-@import "node_modules/bootstrap/scss/bootstrap";
+@import "bootstrap/scss/bootstrap";

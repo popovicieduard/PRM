@@ -2,7 +2,7 @@
     <el-card class="latest-leads">
         <div slot="header">
             <span class="h2 text-capitalize">Latest leads</span>            
-            <router-link :to="{name: 'advertiser-statistics' }" tag="button" class="el-button el-button--mini btn-primary text-white float-right border-0">See All</router-link>
+            <router-link :to="{name: 'advertiser-statistics' }" tag="button" class="el-button btn-primary el-button--mini text-white float-right border-0">See All</router-link>
         </div>
         <el-row :gutter="12">
             <el-col :span="24">

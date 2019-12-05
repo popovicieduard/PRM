@@ -7,7 +7,7 @@
                 </el-col>
                 <el-col :xs="24" :sm="12" class="float-right">
                     <el-tooltip class="item" effect="dark" content="Remove Campaign" placement="left">
-                        <el-button type="danger" icon="el-icon-delete" class="float-right" circle></el-button>
+                        <el-button type="danger" icon="el-icon-delete" class="float-right lh-0" circle></el-button>
                     </el-tooltip>
                 </el-col>
             </el-row>

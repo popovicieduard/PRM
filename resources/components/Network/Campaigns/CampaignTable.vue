@@ -8,7 +8,7 @@
                             <h2 class="text-capitalize my-1">Filter</h2>
                         </el-col>
                         <el-col :span="12">
-                            <el-button type="primary" class="float-right" size="mini" @click="filterCampaigns">Filter</el-button>
+                            <el-button type="primary" size="mini" class="float-right" @click="filterCampaigns">Filter</el-button>
                         </el-col>
                     </el-row>
                 </div>
@@ -128,7 +128,7 @@ export default {
 
     methods: {
         filterCampaigns(){
-            this.tableData = this.filterByCategory(this.filtereByCountry(this.filterBySearch(this.campaigns, this.filter.search), this.filter.countries), this.filter.categories)
+            this.tableData = this.filterByCategory(this.filterByCountry(this.filterBySearch(this.campaigns, this.filter.search), this.filter.countries), this.filter.categories)
         },
         filterBySearch(campaigns, keyword){
             const search = keyword.trim();
@@ -139,7 +139,7 @@ export default {
             if(!categories.length) return campaigns;
             return campaigns.filter(campaign => campaign.categories.find(category => categories.includes(category)))
         },
-        filtereByCountry(campaigns, countries){
+        filterByCountry(campaigns, countries){
             if(!countries.length) return campaigns;
             return campaigns.filter(campaign => campaign.countries.find(country => countries.includes(country)));
         }

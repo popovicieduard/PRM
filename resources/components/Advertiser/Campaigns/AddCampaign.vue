@@ -93,7 +93,7 @@
               <el-button type="primary" @click="nextStep()">Next</el-button>
             </el-col>
           </el-row>
-            <el-row class="mx-auto" v-show="steps == 2">
+          <el-row class="mx-auto" v-show="steps == 2">
             <el-col :span="24">
               <div class="steps">
                 <el-form-item label="Country Targeting">
@@ -137,7 +137,7 @@
               <el-button type="primary" @click="prevStep()">Previous</el-button>
               <el-button type="success" @click="onSubmit">Create</el-button>
             </el-col>
-            </el-row>
+          </el-row>
         </el-form>
       </el-col>
     </el-row>

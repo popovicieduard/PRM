@@ -1,4 +1,4 @@
 import Vue from 'vue';
-import VueFunnelGraph from '../../utils/vue-funnel-graph-js';
+import VueFunnelGraph from 'upb-funnel-graph';
 
 Vue.use(VueFunnelGraph)
