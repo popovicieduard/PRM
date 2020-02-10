@@ -28,6 +28,51 @@ export default {
                     conversion_goal: 'sign-up',
                     categories: ['bizopp']
 
+                },  {
+                    id: 50,
+                    name: 'Short 3 page submit No survey traffic',
+                    rate: 5,
+                    epc: 0.02,
+                    countries: ['RO'],
+                    conversion_goal: 'sign-up',
+                    categories: ['bizopp']
+
+                },  {
+                    id: 50,
+                    name: 'Short 3 page submit No survey traffic',
+                    rate: 5,
+                    epc: 0.02,
+                    countries: ['RO'],
+                    conversion_goal: 'sign-up',
+                    categories: ['bizopp']
+
+                },  {
+                    id: 50,
+                    name: 'Short 3 page submit No survey traffic',
+                    rate: 5,
+                    epc: 0.02,
+                    countries: ['RO'],
+                    conversion_goal: 'sign-up',
+                    categories: ['bizopp']
+
+                },  {
+                    id: 50,
+                    name: 'Short 3 page submit No survey traffic',
+                    rate: 5,
+                    epc: 0.02,
+                    countries: ['RO'],
+                    conversion_goal: 'sign-up',
+                    categories: ['bizopp']
+
+                },  {
+                    id: 50,
+                    name: 'Short 3 page submit No survey traffic',
+                    rate: 5,
+                    epc: 0.02,
+                    countries: ['RO'],
+                    conversion_goal: 'sign-up',
+                    categories: ['bizopp']
+
                 }, {
                     id: 50,
                     name: 'Short 3 page submit No survey traffic',
@@ -115,6 +160,87 @@ export default {
                     rate: 5,
                     epc: 0.02,
                     countries: ['RO', 'DE'],
+                    conversion_goal: 'sign-up',
+                    categories: ['dating']
+
+                }, {
+                    id: 50,
+                    name: 'Test 4',
+                    rate: 4,
+                    epc: 0.02,
+                    countries: ['RO', 'DE', 'GB'],
+                    conversion_goal: 'sign-up',
+                    categories: ['b2b']
+
+                }, {
+                    id: 50,
+                    name: 'Short 3 page submit No survey traffic',
+                    rate: 2,
+                    epc: 0.02,
+                    countries: ['RO'],
+                    conversion_goal: 'survey',
+                    categories: ['b2b']
+
+                }, {
+                    id: 50,
+                    name: 'Short 3 page submit No survey traffic',
+                    rate: 3,
+                    epc: 0.02,
+                    countries: ['RO', 'GB', 'AT'],
+                    conversion_goal: 'sign-up',
+                    categories: ['dating']
+
+                }, {
+                    id: 50,
+                    name: 'Test 4',
+                    rate: 4,
+                    epc: 0.02,
+                    countries: ['RO', 'DE', 'GB'],
+                    conversion_goal: 'sign-up',
+                    categories: ['b2b']
+
+                }, {
+                    id: 50,
+                    name: 'Short 3 page submit No survey traffic',
+                    rate: 2,
+                    epc: 0.02,
+                    countries: ['RO'],
+                    conversion_goal: 'survey',
+                    categories: ['b2b']
+
+                }, {
+                    id: 50,
+                    name: 'Short 3 page submit No survey traffic',
+                    rate: 3,
+                    epc: 0.02,
+                    countries: ['RO', 'GB', 'AT'],
+                    conversion_goal: 'sign-up',
+                    categories: ['dating']
+
+                }, {
+                    id: 50,
+                    name: 'Test 4',
+                    rate: 4,
+                    epc: 0.02,
+                    countries: ['RO', 'DE', 'GB'],
+                    conversion_goal: 'sign-up',
+                    categories: ['b2b']
+
+                }, {
+                    id: 50,
+                    name: 'Short 3 page submit No survey traffic',
+                    rate: 2,
+                    epc: 0.02,
+                    countries: ['RO'],
+                    conversion_goal: 'survey',
+                    categories: ['b2b']
+
+                }, {
+                    id: 50,
+                    name: 'Short 3 page submit No survey traffic',
+                    rate: 3,
+                    epc: 0.02,
+                    countries: ['RO', 'GB', 'AT'],
                     conversion_goal: 'sign-up',
                     categories: ['dating']
 

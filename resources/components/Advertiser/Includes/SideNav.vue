@@ -63,7 +63,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/theme/scss/_variables.scss';
 
 .sidebar-menu {
   z-index: 2002;

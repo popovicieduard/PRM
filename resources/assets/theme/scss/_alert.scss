@@ -1,0 +1,53 @@
+.alert{
+    &-dismissible .close{
+        padding: 0.7rem 1.25rem !important;
+        & > *{
+            color: #fff;
+        }
+    }
+
+    i, .icon{
+        font-size: 20px;
+    }
+
+    @each $color, $value in $theme-colors {
+        &-#{$color} {
+            color: #fff !important;
+            background: $value !important;
+            border-color: transparent !important;
+            & > * {
+                color: #fff !important;
+            }
+
+            &.alternative{
+                border-radius: 0.25rem;
+                background: rgba($value, 0.55) !important;
+                border-color: transparent !important;
+                border-left: 4px $value solid !important;
+                & > * {
+                    color: $value;
+                }
+
+                &.alert-dismissible .close{
+                    & > *{
+                        color: $value;
+                    }
+                }
+            }
+
+            &.outline{
+                color: $value !important;
+                background: #fff !important;
+                border: 2px $value solid !important;
+                & > * {
+                    color: $value !important;
+                }
+                &.alert-dismissible .close{
+                    & > *{
+                        color: $value;
+                    }
+                }
+            }
+        }
+    }
+}

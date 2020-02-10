@@ -30,7 +30,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/assets/scss/_variables.scss";
+@import '@/assets/theme/scss/_variables.scss';
 
 .el-aside {
   height: 100%;
@@ -95,7 +95,7 @@ textarea {
 .page-leave-active {
   transition-property: opacity;
   transition-timing-function: ease-in-out;
-  transition-duration: 500ms;
+  transition-duration: 200ms;
 }
 .page-enter,
 .page-leave-to {

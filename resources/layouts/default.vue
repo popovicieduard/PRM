@@ -1,55 +1,99 @@
 <template>
-  <div>
-    <nuxt />
-  </div>
+  <el-container min-height="100vh">
+    <el-container class="main-container">
+      <el-header>
+        <Header />
+      </el-header>
+        <el-main>
+          <transition name="page">
+            <nuxt />
+          </transition>
+        </el-main>
+    </el-container>
+  </el-container>
 </template>
 
-<style>
+<script>
+import Header from "@/components/Homepage/Includes/Header";
+
+export default {
+  components: {
+    Header,
+  },
+  transition: "page",
+};
+</script>
+
+<style lang="scss">
+@import '@/assets/theme/scss/_variables.scss';
+
+.el-aside {
+  height: 100%;
+}
+
+.main-container {
+  background-color: $secondary;
+  max-height: 100vh;
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: $secondary; 
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: $gray-500; 
+    border-radius: 5px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: $gray-600; 
+  }
+  
+}
+
+@font-face {
+  font-family: LLBrown;
+  src: url("~assets/fonts/BrownProTT-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: LLBrown Bold;
+  font-weight: bold;
+  src: url("~assets/fonts/lineto-brown-pro-bold.woff") format("woff");
+}
 html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
+  overflow-y: hidden;
 }
 
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-  margin: 0;
+body {
+  font-family: LLBrown, Open Sans, Segoe UI, sans-serif !important;
+  background-color: $secondary;
 }
 
-.button--green {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
-  text-decoration: none;
-  padding: 10px 30px;
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
 }
 
-.button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
+.page-enter-active,
+.page-leave-active {
+  transition-property: opacity;
+  transition-timing-function: ease-in-out;
+  transition-duration: 200ms;
 }
-
-.button--grey {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
-}
-
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
+.page-enter,
+.page-leave-to {
+  opacity: 0;
 }
 </style>

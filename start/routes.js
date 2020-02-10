@@ -17,9 +17,22 @@ const Route = use('Route')
 const Helpers = use('Helpers')
 
 Route.group('api', () => {
-    Route.get('test', async () => {
-        return Helpers.publicPath() + " " + Helpers.appRoot() + " " + Helpers.resourcesPath() + " " + Helpers.tmpPath();
-    })
+    //Network auth
+    Route.post('auth/network/register', 'AuthController.registerUser')
+    Route.post('auth/network/login', 'AuthController.loginUser')
+
+    //Advertiser auth
+    Route.post('auth/advertiser/register', 'AuthController.registerAdvertiser')
+    Route.post('auth/advertiser/login', 'AuthController.loginAdvertiser')
+
+    //Partner auth
+    Route.post('auth/partner/register', 'AuthController.registerPartner')
+    Route.post('auth/partner/login', 'AuthController.loginPartner')
+
+    Route.get('/me', async function(){
+        return 'ok'
+    }).middleware(['auth:user'])
+
 }).prefix('api');
 
 

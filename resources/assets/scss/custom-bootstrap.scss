@@ -1,4 +1,4 @@
-@import "@/assets/scss/_variables.scss";
+@import "@/assets/theme/scss/_variables.scss";
 
 .upb-primary { color: $primary !important};
 .upb-secondary{color: $default};
@@ -18,8 +18,8 @@
 }
 
 .bg-muted{
-    background: $upb-muted;
-    border: 1px $upb-muted solid;
+    background: $muted;
+    border: 1px $muted solid;
 }
 
 $font-size-base: 0.625rem !default;
@@ -28,5 +28,4 @@ $font-size-base: 0.625rem !default;
     line-height: 0;
 }
 
-// All of bootstrap
 @import "bootstrap/scss/bootstrap";

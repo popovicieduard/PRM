@@ -1,6 +1,7 @@
 <script>
 export default {
-  data:[{
+  data:[
+    {
         label: "Afghanistan",
         value: "AF"
     }, {
@@ -747,6 +748,7 @@ export default {
     }, {
         label: "Zimbabwe",
         value: "ZW"
-    }]
+    }
+    ]
 }
 </script>

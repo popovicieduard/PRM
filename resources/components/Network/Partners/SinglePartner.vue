@@ -2,10 +2,10 @@
     <el-card>
         <div slot="header">
             <el-row>
-                <el-col :xs="24" :sm="12" class="my-1">
+                <el-col :span="12" class="my-1">
                     <span class="h2">Partner - <span class="text-primary">{{ partner.id }} - {{ partner.username }}</span></span>
                 </el-col>
-                <el-col :xs="24" :sm="12" class="float-right">
+                <el-col :span="12" class="float-right">
                     <el-tooltip class="item" effect="dark" content="Deactivate Partner" placement="left">
                         <el-button type="danger" icon="el-icon-delete" class="float-right lh-0" circle></el-button>
                     </el-tooltip>
@@ -20,7 +20,7 @@
                             <h3 class="mb-0">This Month</h3>
                         </el-col>
                         <el-col :span="12" class="text-center">
-                            <i class="icon-lead"></i>
+                            <h3 class="text-success mb-0 float-right">{{5000 | numFormat('0,0.00')}} $</h3>
                         </el-col>
                     </el-row>
                 </el-card>     
@@ -28,21 +28,20 @@
             <el-col :xs="24" :md="12" class="my-2">
                 <el-card shadow="hover">
                     <el-row>
-                        <el-col :span="18">
+                        <el-col :span="12">
                             <h3 class="mb-0">Last Month</h3>
                         </el-col>
-                        <el-col :span="6" class="text-center">
-                            <i class="icon-conversion"></i>
+                        <el-col :span="12" class="text-center">
+                            <h3 class="text-success mb-0 float-right">{{5000 | numFormat('0,0.00')}} $</h3>
                         </el-col>
                     </el-row>
                 </el-card>     
             </el-col>
         </el-row>
-        <el-row>
+        <el-row class="d-none">
             <el-col :xs="24">
                 <el-tabs v-model="activeName" @tab-click="handleClick">
                     <el-tab-pane label="Latest Leads" name="first">Latest Leads</el-tab-pane>
-                    <!-- <el-tab-pane label="Payment History" name="second"></el-tab-pane> -->
                 </el-tabs>
             </el-col>
         </el-row>
