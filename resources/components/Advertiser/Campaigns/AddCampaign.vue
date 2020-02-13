@@ -14,12 +14,6 @@
           <el-row class="mx-auto" v-show="steps == 0">
             <el-col :span="18">
               <div class="steps">
-                <el-form-item label="Campaign Name">
-                  <el-input
-                    v-model="campaign.name"
-                    placeholder="This is for reference in dashboard"
-                  ></el-input>
-                </el-form-item>
                 <el-form-item label="Campaign Title">
                   <el-input v-model="campaign.title" placeholder="This will be showed to partners"></el-input>
                 </el-form-item>
@@ -29,23 +23,6 @@
                     v-model="campaign.description"
                     placeholder="A short description about your campaign"
                   ></el-input>
-                </el-form-item>
-                <el-form-item label="Campaign Instructions">
-                  <el-input
-                    type="textarea"
-                    v-model="campaign.instructions"
-                    placeholder="Campaign instructions such as: goal KPI's, notes to partners, etc..."
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="Campaign Creative">
-                <el-upload
-                  action=""
-                  ref="upload"
-                  list-type="picture-card"
-                  :auto-upload="false"
-                  :limit="1">
-                  <i class="el-icon-plus"></i>
-                </el-upload>
                 </el-form-item>
               </div>
             </el-col>
@@ -63,21 +40,7 @@
                     <el-option label="Purchase" value="purchase"></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="Campaign Categories">
-                  <el-select
-                    v-model="campaign.categories"
-                    multiple
-                    collapse-tags
-                    placeholder="Select Categories"
-                  >
-                    <el-option
-                      v-for="category in categories"
-                      :key="category.value"
-                      :label="category.label"
-                      :value="category.value"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
+                <categories @setCategories="setCategories"/>
                 <el-form-item label="Landing Page">
                   <el-input
                     placeholder="https://landing.com/"
@@ -96,28 +59,8 @@
           <el-row class="mx-auto" v-show="steps == 2">
             <el-col :span="24">
               <div class="steps">
-                <el-form-item label="Country Targeting">
-                  <el-select
-                    v-model="campaign.countries"
-                    filterable
-                    multiple
-                    collapse-tags
-                    placeholder="Select"
-                  >
-                    <el-option
-                      v-for="country in countries"
-                      :key="country.value"
-                      :label="country.label"
-                      :value="country.value"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="Device Targeting">
-                  <el-checkbox-group v-model="campaign.devices">
-                    <el-checkbox label="Desktop"></el-checkbox>
-                    <el-checkbox label="Mobile"></el-checkbox>
-                  </el-checkbox-group>
-                </el-form-item>
+                <countries @setCountries="setCountries"/>
+                <devices @setDevices="setDevices"/>
                 <el-form-item label="Commision (USD)">
                   <el-input-number
                     v-model="campaign.commision"
@@ -145,18 +88,23 @@
 </template>
 
 <script>
-import CampaignCategories from "@/components/utils/CampaignCategories";
-import CountrySelect from "@/components/utils/CountrySelect";
+import Categories from "@/components/utils/CampaignCategories";
+import Countries from "@/components/utils/CountrySelect";
+import Devices from "@/components/utils/DeviceTargeting";
+import qs from 'qs';
 
 export default {
+  components: {
+    Categories,
+    Countries,
+    Devices
+  },
   data() {
     return {
+      error: null,
       campaign: {
-        name: "",
         title: "",
         description: "",
-        instructions: "",
-        image: "",
         conversion_goal: "",
         categories: [],
         url: "",
@@ -165,14 +113,49 @@ export default {
         commision: 0.1,
         cap: 100
       },
-      categories: CampaignCategories.data,
-      countries: CountrySelect.data,
       steps: 0
     };
   },
   methods: {
-    onSubmit() {
-      console.log(this.campaign);
+    setCategories(categories){
+      this.campaign.categories = categories
+    },
+    setCountries(countries){
+      this.campaign.countries = countries
+    },
+    setDevices(devices){
+      this.campaign.devices = devices
+    },
+    async onSubmit() {
+      try {
+        await this.$axios.post('advertiser/create-campaign', {
+          form: {
+            title: this.campaign.title,
+            description: this.campaign.description,
+            conversion_goal: this.campaign.conversion_goal,
+            categories: this.campaign.categories,
+            url: this.campaign.url,
+            countries: this.campaign.countries,
+            devices: this.campaign.devices,
+            commision: this.campaign.commision,
+            cap: this.campaign.cap,
+          },
+          paramsSerializer: form => {
+            return qs.stringify(form)
+          }
+        }).then((data) => {
+          console.log(data)
+        })
+      } catch (error) {
+          error.response.data.forEach((error) =>{
+            	setTimeout(() => {
+                this.$notify.error({
+                  title: 'Error',
+                  message: error.message,
+                });
+              }, 100);
+          })
+      }
     },
     nextStep(){
       this.steps++;
@@ -180,12 +163,6 @@ export default {
     prevStep(){
       this.steps--;
     },
-    handlePictureCardPreview(){
-
-    },
-    updateImageList(){
-      
-    }
   }
 };
 </script>
@@ -193,7 +170,7 @@ export default {
 <style scoped>
 
   .campaign-form{
-    min-height: 800px;
+    min-height: 550px;
   }
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;

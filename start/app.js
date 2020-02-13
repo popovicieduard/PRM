@@ -21,6 +21,10 @@ const providers = [
   '@adonisjs/shield/providers/ShieldProvider',
   '@adonisjs/session/providers/SessionProvider',
   '@adonisjs/auth/providers/AuthProvider',
+  '@adonisjs/validator/providers/ValidatorProvider',
+  'adonis-acl/providers/AclProvider',
+  'adonis-lucid-filter/providers/LucidFilterProvider',
+  '@adonisjs/lucid-slugify/providers/SlugifyProvider',
   path.join(__dirname, '..', 'providers', 'NuxtProvider')
 ]
 
@@ -34,7 +38,8 @@ const providers = [
 |
 */
 const aceProviders = [
-  '@adonisjs/lucid/providers/MigrationsProvider'
+  '@adonisjs/lucid/providers/MigrationsProvider',
+  'adonis-acl/providers/CommandsProvider',
 ]
 
 /*
@@ -49,7 +54,10 @@ const aceProviders = [
 |   { Route: 'Adonis/Src/Route' }
 |
 */
-const aliases = {}
+const aliases = {
+  Role: 'Adonis/Acl/Role',
+  Permission: 'Adonis/Acl/Permission',
+}
 
 /*
 |--------------------------------------------------------------------------

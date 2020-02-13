@@ -1,61 +1,43 @@
+<template>
+    <el-form-item label="Campaign Categories">
+        <el-select
+        v-model="selected_categories"
+        multiple
+        collapse-tags
+        placeholder="Select Categories"
+        >
+        <el-option
+            v-for="category in categories"
+            :key="category.value"
+            :label="category.name"
+            :value="category.slug"
+        ></el-option>
+        </el-select>
+    </el-form-item>
+</template>
+
 <script>
 export default {
-data:[
-            {
-            value: 'automotive',
-            label: 'Automotive'
-            }, {
-            value: 'bizopp',
-            label: 'Biz Opp'
-            }, {
-            value: 'b2b',
-            label: 'B2B'
-            }, {
-            value: 'dating',
-            label: 'Dating'
-            }, {
-            value: 'downloads',
-            label: 'Downloads'
-            }, {
-            value: 'ecommerce',
-            label: 'E-Commerce'
-            }, {
-            value: 'education',
-            label: 'Education'
-            }, {
-            value: 'email-submits',
-            label: 'Email Submits'
-            }, {
-            value: 'financial',
-            label: 'Financial'
-            }, {
-            value: 'free-stuff',
-            label: 'Free Stuff'
-            }, {
-            value: 'gaming',
-            label: 'Gaming'
-            }, {
-            value: 'health',
-            label: 'Health'
-            }, {
-            value: 'insurance',
-            label: 'Insurance'
-            }, {
-            value: 'legal',
-            label: 'Legal'
-            }, {
-            value: 'subscriptions',
-            label: 'Subscriptions'
-            }, {
-            value: 'surveys',
-            label: 'Surveys'
-            }, {
-            value: 'sweepstakes',
-            label: 'Sweepstakes'
-            }, {
-            value: 'travel',
-            label: 'Travel'
-            }
-        ]
+    data() {
+        return {
+            categories: [],
+            selected_categories: []
+        }
+    },
+    created() {
+            this.$axios.get('util/categories')
+                .then((data) => {
+                    let categories = data.data
+                    this.categories = categories
+
+                })
+                .catch((e) => {
+                })
+    },
+    watch: {
+        selected_categories() {
+            this.$emit('setCategories', this.selected_categories);
+        }
+    }
 }
 </script>

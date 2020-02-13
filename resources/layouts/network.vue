@@ -26,6 +26,16 @@ export default {
     SideNav,
   },
   transition: "page",
+  watch: {
+    $route: {
+        immediate: true,
+        handler(to, from) {
+            if (!this.$store.state.auth.auth_token || this.$store.state.auth.auth_instance.role != 'network') {
+              return this.$router.push({'name': 'auth-login'});
+            }
+        }
+    }
+  },
 };
 </script>
 

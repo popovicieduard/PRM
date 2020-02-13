@@ -13,7 +13,7 @@
                 <i class="el-icon-s-tools text-primary"></i>
                 Settings
             </el-menu-item>
-            <el-menu-item class="sub-menu-item text-danger">
+            <el-menu-item class="sub-menu-item text-danger" @click="logout">
                 <i class="el-icon-unlock text-danger"></i>
                 Logout
             </el-menu-item>
@@ -31,9 +31,13 @@ export default {
     methods: {
         reloadPage(){
             this.$router.go(0)
+        },
+        logout(){
+          this.$store.dispatch('auth/logout')
+          this.$router.push({'name': '/'})
         }
     },
-    mounted: function(){
+    mounted() {
         this.activeIndex = this.$route.name;
     },
     watch: {

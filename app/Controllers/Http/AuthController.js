@@ -1,104 +1,74 @@
 'use strict'
 
 const User = use('App/Models/User');
-const Advertiser = use('App/Models/Advertiser');
-const Partner = use('App/Models/Partner');
-
+const Role = use('Role');
 
 class AuthController {
-    async registerUser({request, auth, response}) {
+    async register({request, auth, response}) {
+        let {username,email, password, role} = request.all();
 
-        let user = await User.create(request.all())
+        try{
+            let userRole = await Role.findByOrFail('slug', role)
 
-        //generate token for user;
-        let token = await auth.authenticator('user').generate(user)
+            let user = await User.create({
+                username: username,
+                email: email,
+                password: password
+            })
 
-        Object.assign(user, token)
+            await user.roles().attach([userRole.id])
 
-        return response.json(user)
-    }
-
-    async loginUser({request, auth, response}) {
-
-        let {email, password} = request.all();
-
-        try {
-            if (await auth.authenticator('user').attempt(email, password)) {
-            let user = await User.findBy('email', email)
-            let token = await auth.authenticator('user').generate(user)
+            //generate token for user;
+            let token = await auth.generate(user)
 
             Object.assign(user, token)
+            Object.assign(user, {role: userRole.slug})
+
             return response.json(user)
-            }
-
-
         }
         catch (e) {
-            return response.json({message: 'You are not registered!'})
+            return response.status(400).json({message: 'Something went wrong'})
         }
     }
 
-    async registerAdvertiser({request, auth, response}) {
-
-        let advertiser = await Advertiser.create(request.all())
-
-        //generate token for advertiser;
-        let token = await auth.authenticator('advertiser').generate(advertiser)
-
-        Object.assign(advertiser, token)
-
-        return response.json(advertiser)
-    }
-
-    async loginAdvertiser({request, auth, response}) {
+    async login({request, auth, response}) {
 
         let {email, password} = request.all();
 
         try {
-            if (await auth.authenticator('advertiser').attempt(email, password)) {
-            let advertiser = await Advertiser.findBy('email', email)
-            let token = await auth.authenticator('advertiser').generate(advertiser)
+            const token = await auth.attempt(
+                email,
+                password
+            )
 
-            Object.assign(advertiser, token)
-            return response.json(advertiser)
-            }
+            let user = await User.findBy('email', email)
 
-
+            let userRole = await user.getRoles()
+            
+            Object.assign(user, token)
+            Object.assign(user, {role: userRole[0]})
+    
+            return response.json(user)
         }
         catch (e) {
-            return response.json({message: 'You are not registered!'})
+            return response.status(400).json({message: 'Invalid email or password'})
         }
     }
 
-    async registerPartner({request, auth, response}) {
-
-        let partner = await Partner.create(request.all())
-
-        //generate token for partner;
-        let token = await auth.authenticator('partner').generate(partner)
-
-        Object.assign(partner, token)
-
-        return response.json(partner)
-    }
-
-    async loginPartner({request, auth, response}) {
-
-        let {email, password} = request.all();
+    async me({auth, response}) {
 
         try {
-            if (await auth.authenticator('partner').attempt(email, password)) {
-            let partner = await Partner.findBy('email', email)
-            let token = await auth.authenticator('partner').generate(partner)
 
-            Object.assign(partner, token)
-            return response.json(partner)
-            }
+            let user = await auth.getUser()
 
-
+            let userRole = await user.getRoles()
+            
+            Object.assign(user, {role: userRole[0]})
+    
+            return response.json(user)
         }
         catch (e) {
-            return response.json({message: 'You are not registered!'})
+            return response.status(400).json({message: 'Invalid JWT'})
         }
     }
 

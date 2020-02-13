@@ -16,24 +16,27 @@
 const Route = use('Route')
 const Helpers = use('Helpers')
 
-Route.group('api', () => {
+Route.group('auth', () => {
     //Network auth
-    Route.post('auth/network/register', 'AuthController.registerUser')
-    Route.post('auth/network/login', 'AuthController.loginUser')
-
-    //Advertiser auth
-    Route.post('auth/advertiser/register', 'AuthController.registerAdvertiser')
-    Route.post('auth/advertiser/login', 'AuthController.loginAdvertiser')
-
-    //Partner auth
-    Route.post('auth/partner/register', 'AuthController.registerPartner')
-    Route.post('auth/partner/login', 'AuthController.loginPartner')
-
-    Route.get('/me', async function(){
-        return 'ok'
-    }).middleware(['auth:user'])
+    Route.post('auth/register', 'AuthController.register').validator("StoreUser")
+    Route.post('auth/login', 'AuthController.login').validator("AuthUser");
+    Route.get('auth/me', 'AuthController.me').middleware('auth')
 
 }).prefix('api');
+
+Route.group('utils', () => {
+    //utils
+    Route.get('util/categories', 'UtilController.categories')
+    Route.get('util/countries', 'UtilController.countries')
+    Route.get('util/devices', 'UtilController.devices')
+
+}).prefix('api').middleware('auth');
+
+Route.group('advertiser', () => {
+    //advertiser
+    Route.post('advertiser/create-campaign', 'AdvertiserController.createCampaign').validator("StoreCampaign");
+
+}).prefix('api').middleware(['auth', 'is:advertiser']);
 
 
 Route.any('*', 'NuxtController.render')

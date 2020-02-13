@@ -74,34 +74,4 @@ module.exports = {
       secret: Env.get('APP_KEY')
     }
   },
-  user: {
-    serializer: 'lucid',
-    model: 'App/Models/User',
-    scheme: 'jwt',
-    uid: 'email',
-    password: 'password',
-    options: {
-      secret: `${Env.get('APP_KEY')}-user`
-    }
-  },
-  advertiser: {
-    serializer: 'lucid',
-    model: 'App/Models/Advertiser',
-    scheme: 'jwt',
-    uid: 'email',
-    password: 'password',
-    options: {
-      secret: `${Env.get('APP_KEY')}-advertiser`
-    }
-  },
-  partner: {
-    serializer: 'lucid',
-    model: 'App/Models/Partner',
-    scheme: 'jwt',
-    uid: 'email',
-    password: 'password',
-    options: {
-      secret: `${Env.get('APP_KEY')}-partner`
-    }
-  }
 }

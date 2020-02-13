@@ -16,6 +16,13 @@ class User extends Model {
     this.addHook('beforeSave', 'User.hashPassword')
   }
 
+  static get traits () {
+    return [
+      '@provider:Adonis/Acl/HasRole',
+      '@provider:Adonis/Acl/HasPermission'
+    ]
+  }
+
   static get hidden () {
     return ['password']
   }
@@ -30,8 +37,17 @@ class User extends Model {
    *
    * @return {Object}
    */
-  tokens () {
-    return this.hasMany('App/Models/Token')
+
+  tokens() {
+    return this.hasMany("App/Models/Token");
+  }
+
+  campaigns() {
+    return this.hasMany("App/Models/Campaign");
+  }
+
+  clicks() {
+    return this.hasMany("App/Models/Click");
   }
 }
 

@@ -67,7 +67,7 @@ export default {
       activeIndex: null
     };
   },
-  mounted: function() {
+  mounted() {
     this.activeIndex = this.$route.name;
   },
   watch: {

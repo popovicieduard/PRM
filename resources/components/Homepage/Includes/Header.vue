@@ -1,9 +1,9 @@
 <template>
     <el-menu class="header-menu border-0 text-capitalize float-right" mode="horizontal" :router="true" :default-active="activeIndex">
-        <el-menu-item index="auth-network-register" :route="{name: 'auth-network-register'}" class="menu-item border-0 p-0 mr-4">
+        <el-menu-item index="auth-register" :route="{name: 'auth-register'}" class="menu-item border-0 p-0 mr-4">
             Register
         </el-menu-item>
-        <el-menu-item index="auth-network-login" :route="{name: 'auth-network-login'}" class="menu-item border-0 p-0 mr-4">
+        <el-menu-item index="auth-login" :route="{name: 'auth-login'}" class="menu-item border-0 p-0 mr-4">
             Login
         </el-menu-item>
     </el-menu>
