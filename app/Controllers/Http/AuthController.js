@@ -43,6 +43,10 @@ class AuthController {
 
             let user = await User.findBy('email', email)
 
+            if(!user.is_active){
+                return response.status(401).json({message: 'User has been removed'})
+            }
+
             let userRole = await user.getRoles()
             
             Object.assign(user, token)
@@ -69,6 +73,27 @@ class AuthController {
         }
         catch (e) {
             return response.status(400).json({message: 'Invalid JWT'})
+        }
+    }
+
+    async updateUser({request, auth, response}) {
+        let {password} = request.all();
+
+        try {
+            let user = await auth.getUser()
+
+            user.password = password
+
+            await user.save()
+
+            let token = await auth.generate(user)
+
+            Object.assign(user, token)
+    
+            return response.json(user)
+        }
+        catch (e) {
+            return response.status(400).json({message: 'Something went wrong'})
         }
     }
 

@@ -15,7 +15,7 @@ class CampaignSchema extends Schema {
       table.string('url').notNullable()
       table.float('commision').notNullable()
       table.integer('cap').notNullable()
-      table.boolean('is_active').defaultTo(false)
+      table.boolean('is_active').defaultTo(true)
       table.boolean('is_removed').defaultTo(false)
       table.timestamps()
     })

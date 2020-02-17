@@ -1,12 +1,9 @@
 <template>
     <el-menu class="header-menu border-0 text-capitalize float-right" mode="horizontal" :router="true" :default-active="activeIndex">
-        <el-menu-item class="menu-item border-0 p-0" @click="reloadPage()">
+        <el-menu-item class="menu-item border-0 p-0 mr-4" @click="reloadPage()">
             <el-tooltip class="item" effect="dark" content="Refresh Data" placement="bottom">
                 <span><i class="el-icon-refresh-left"></i></span>
             </el-tooltip>
-        </el-menu-item>
-        <el-menu-item index="advertiser-deposit" :route="{name: 'advertiser-deposit'}" class="menu-item">
-            <span class="upb-balance text-success text-uppercase font-weight-bold h4">{{ 401 | numFormat('0,0.00') }} $</span>
         </el-menu-item>
         <el-submenu index="header-sub-menu" class="menu-item">
             <template slot="title">
@@ -16,7 +13,7 @@
                 <i class="el-icon-s-tools text-primary"></i>
                 Settings
             </el-menu-item>
-            <el-menu-item class="sub-menu-item text-danger">
+            <el-menu-item class="sub-menu-item text-danger" @click="logout">
                 <i class="el-icon-unlock text-danger"></i>
                 Logout
             </el-menu-item>
@@ -34,9 +31,13 @@ export default {
     methods: {
         reloadPage(){
             this.$router.go(0)
+        },
+        logout(){
+            this.$store.dispatch('auth/logout')
+            this.$router.push({'name': 'auth-login'})
         }
     },
-    mounted: function(){
+    mounted(){
         this.activeIndex = this.$route.name;
     },
     watch: {

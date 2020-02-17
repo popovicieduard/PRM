@@ -1,5 +1,5 @@
 <template>
-    <el-card>
+    <el-card v-if="!campaign.is_removed">
         <div slot="header">
             <el-row>
                 <el-col :xs="24" :sm="12" class="my-1">
@@ -13,11 +13,6 @@
         <el-row :gutter="36">
             <el-col :span="12">
                 <el-card shadow="never" :body-style="{ padding: '0px' }">
-                    <el-image class="image" :src="campaign.image" fit="cover">
-                        <div slot="error" class="image-slot mt-5">
-                            <h5 class="text-center">Not Found</h5>
-                        </div>
-                    </el-image>
                     <div style="padding: 14px;">
                         <h1 class="text-capitalize">{{ campaign.title }}</h1>
                         <hr>
@@ -26,7 +21,7 @@
                                     <span class="h4">Categories:</span>
                                 </el-col>
                                 <el-col :span="14">
-                                    <el-tag v-for="category in campaign.categories" :key="category" class="mx-1 my-1 text-capitalize" size="small" effect="plain">{{ category }}</el-tag>                                    
+                                    <el-tag v-for="category in campaign.categories" :key="category.name" class="mx-1 my-1 text-capitalize" size="small" effect="plain">{{ category.name }}</el-tag>                                    
                                 </el-col>
                             </el-row>
                             <hr>
@@ -35,7 +30,7 @@
                                     <span class="h4">Devices:</span>                                    
                                 </el-col>
                                 <el-col :span="14">
-                                    <el-tag v-for="device in campaign.devices" :key="device" class="mx-1 my-1 text-capitalize" size="small" effect="plain">{{ device }}</el-tag>                                    
+                                    <el-tag v-for="device in campaign.devices" :key="device.name" class="mx-1 my-1 text-capitalize" size="small" effect="plain">{{ device.name }}</el-tag>                                    
                                 </el-col>
                             </el-row>
                             <hr>
@@ -53,7 +48,7 @@
                                     <span class="h4">Countries:</span>                                    
                                 </el-col>
                                 <el-col :span="14">
-                                    <el-tag v-for="country in campaign.countries" :key="country" class="mx-1 my-1 text-capitalize" size="small" effect="plain">{{ country | country }}</el-tag>                                                                    
+                                    <el-tag v-for="country in campaign.countries" :key="country.name" class="mx-1 my-1 text-capitalize" size="small" effect="plain">{{ country.name | country }}</el-tag>                                                                    
                                 </el-col>
                             </el-row>
                             <hr>
@@ -100,20 +95,10 @@
                 <el-row class="my-4">
                     <el-col :span="24">
                         <el-card shadow="never">
-                                <div slot="header">
-                                    <h4 class="mb-0">Campaign Instructions</h4>
-                                </div>
-                            <h3 class="text-capitalize">{{ campaign.instructions }}</h3>
-                        </el-card>
-                    </el-col>
-                </el-row>
-                <el-row class="my-4">
-                    <el-col :span="24">
-                        <el-card shadow="never">
                             <div slot="header">
                                 <h4 class="text-center mb-0">Daily Cap</h4>
                             </div>
-                            <el-progress :text-inside="true" :stroke-width="15" :percentage="(todayLeads / campaign.cap) * 100" :format="format"></el-progress>
+                            <el-progress :text-inside="true" :stroke-width="15" :percentage="(campaign.__meta__.clicks_count / campaign.cap) * 100" :format="format"></el-progress>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -158,8 +143,8 @@
                 </el-row>
             </el-col>
             <el-col :span="24">
-                <el-tooltip class="item" effect="dark" content="Delete Campaign" placement="left">
-                    <el-button type="danger" icon="el-icon-delete" class="float-right lh-0" circle></el-button>
+                <el-tooltip class="item" effect="dark" content="Remove Campaign" placement="left">
+                    <el-button type="danger" icon="el-icon-delete" class="float-right lh-0" circle @click="removeCampaign"></el-button>
                 </el-tooltip>
             </el-col>
         </el-row>
@@ -167,29 +152,26 @@
 </template>
 
 <script>
+import moment from 'moment'
     export default {
         props: {
             campaign:{
-                type: Object,
+                type: Object | null,
                 required: true
             },
-            todayLeads:{
-                type: Number,
-                required: true
-            }
         },
         computed: {
             postBackUrl(){
                 return this.$store.getters['auth/getDomain'] + "/api/postback/" +  this.campaign.id + "/{CLICK_ID}"
-            }
+            },
         },
         methods: {
             format(percentage) {
                 if(this.campaign.cap <= this.todayLeads){
-                    this.todayLeads = this.campaign.cap;
+                    this.campaign.__meta__.clicks_count = this.campaign.cap;
                     return 'Capped';
                 }
-                return percentage === 100 ? 'Capped' : this.todayLeads + ' / ' + this.campaign.cap;
+                return percentage === 100 ? 'Capped' : this.campaign.__meta__.clicks_count + ' / ' + this.campaign.cap;
             },
             onCopy: function (e) {
                 this.$message({
@@ -197,6 +179,48 @@
                     center: true,
                     showClose: true,
                     duration: 2000,
+                });
+            },
+            removeCampaign(id){
+                this.$confirm('This will permanently remove the campaign. Continue?', {
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Cancel',
+                    type: 'danger'
+                }).then(async () => {
+                    this.loading = true;
+                    try {
+                        await this.$axios.delete(`advertiser/campaign/${this.$route.params.campaignId}`)
+                        .then((data) => {
+                            this.$notify({
+                                message: 'Campaign has been removed',
+                                type: 'success'
+                            });
+                            this.loading = false;
+                            this.$router.push({'name': 'advertiser-campaigns'})
+                            
+                        })
+                    } catch (error) {
+                        let _error = error.response.data
+                        if(_error.constructor === Array){
+                            _error.forEach((error) =>{
+                            setTimeout(() => {
+                                this.$notify.error({
+                                title: 'Error',
+                                message: error.message,
+                                });
+                            }, 100);
+                            })
+                        }else{
+                            if(this){
+                            this.$notify.error({
+                                title: 'Error',
+                                message: _error.message,
+                            });
+                            }
+                        }
+                    }
+                }).catch(() => {
+   
                 });
             },
         },

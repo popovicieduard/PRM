@@ -1,5 +1,5 @@
 <template>
-    <el-form-item label="Campaign Categories">
+    <el-form-item label="Campaign Categories"  prop="categories">
         <el-select
         v-model="selected_categories"
         multiple
@@ -18,6 +18,9 @@
 
 <script>
 export default {
+    props: {
+        propCategories: Array
+    },
     data() {
         return {
             categories: [],
@@ -25,14 +28,17 @@ export default {
         }
     },
     created() {
-            this.$axios.get('util/categories')
-                .then((data) => {
-                    let categories = data.data
-                    this.categories = categories
+        this.$axios.get('util/categories')
+            .then((data) => {
+                let categories = data.data
+                this.categories = categories
 
-                })
-                .catch((e) => {
-                })
+            })
+            .catch((e) => {
+            })
+        if(this.propCategories){
+            this.selected_categories = this.propCategories.map(device => device.slug)
+        }
     },
     watch: {
         selected_categories() {

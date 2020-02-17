@@ -33,8 +33,8 @@ export default {
             this.$router.go(0)
         },
         logout(){
-          this.$store.dispatch('auth/logout')
-          this.$router.push({'name': '/'})
+            this.$store.dispatch('auth/logout')
+            this.$router.push({'name': 'auth-login'})
         }
     },
     mounted() {

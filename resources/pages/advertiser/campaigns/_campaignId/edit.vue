@@ -1,36 +1,53 @@
 <template>
-        <el-row>
-                <el-col>
-                        <EditCampaign :campaign="campaign"/>
-                </el-col>
-        </el-row>
+  <el-row>
+    <el-col>
+      <EditCampaign v-if="campaign" :campaign="campaign" />
+    </el-col>
+  </el-row>
 </template>
 
 <script>
-import EditCampaign from '@/components/Advertiser/Campaigns/EditCampaign'
+import EditCampaign from "@/components/Advertiser/Campaigns/EditCampaign";
 export default {
-        components: {
-                EditCampaign
-        },
-        data() {
-                return {
-                        campaign:{
-                                id: 421321,
-                                name: "Test",
-                                title: "Test",
-                                description: "Short 3 page submit No survey traffic",
-                                instructions: "No testerino now please",
-                                image: "https://via.placeholder.com/500",
-                                conversion_goal: "sign-up",
-                                categories: ['b2b', 'ecommerce'],
-                                url: "https://landing.com/?click_id={CLICK_ID}",
-                                countries: ['RO', 'US', 'GB', 'AT'],
-                                devices: ["Mobile", "Desktop"],
-                                commision: 5.2,
-                                cap: 25,
-                                status: 'paused',
-                        },
-                }
+  components: {
+    EditCampaign
+  },
+  data() {
+    return {
+      campaign: null,
+    };
+  },
+  created() {
+    if(!this.campaign){
+      this.$router.push({'name': 'advertiser-campaigns'})
+    }
+  },
+  async asyncData({ $axios, params }) {
+    try {
+      const { data } = await $axios.get(
+          `advertiser/campaign/${params.campaignId}`
+      );
+      return { campaign: data };
+    } catch (error) {
+      let _error = error.response.data
+      if(_error.constructor === Array){
+        _error.forEach((error) =>{
+          setTimeout(() => {
+            this.$notify.error({
+              title: 'Error',
+              message: error.message,
+              });
+          }, 100);
+        })
+      }else{
+        if(this){
+          this.$notify.error({
+            title: 'Error',
+            message: _error.message,
+          });
         }
-}
+      }
+    }
+  }
+};
 </script>

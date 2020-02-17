@@ -14,6 +14,7 @@ class ClickSchema extends Schema {
       table.float('cost').notNullable()
       table.string('ip_address').notNullable()
       table.boolean('is_lead').defaultTo(false)
+      table.boolean('is_active').defaultTo(false)
       table.timestamps()
     })
   }

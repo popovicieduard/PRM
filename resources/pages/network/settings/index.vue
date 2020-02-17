@@ -1,8 +1,5 @@
 <template>
     <el-row>
-        <el-col :span="24" class="mb-1">
-            <Profile :advertiser="AuthObject"/>
-        </el-col>
         <el-col :span="24" class="my-2">
             <PasswordForm/>
         </el-col>
@@ -10,14 +7,11 @@
 </template>
 
 <script>
-import Profile from '@/components/Advertiser/Settings/Profile';
-import PasswordForm from '@/components/Advertiser/Settings/PasswordForm';
+import PasswordForm from '@/components/utils/PasswordForm';
 
 export default {
     components: {
-        Profile,
         PasswordForm
-
     },
     data(){
         return {

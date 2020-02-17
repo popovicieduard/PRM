@@ -1,7 +1,7 @@
 <template>
     <el-row>
         <el-col :span="24">
-            <SingleLead :lead="lead" :click="click"/>
+            <SingleLead :lead="lead"/>
         </el-col>
     </el-row>
 </template>
@@ -16,24 +16,33 @@ export default {
     },
     data(){
         return {
-            lead:{
-                id: 50,
-                click_id: 5132,
-                partner_id: 523,
-                campaign_name: 'Short 3 Page Submit No Survey Traffic',
-                campaign_id: 42,
-                cost: 52,
-                created_at: moment().format('DD MMM YYYY - HH:mm:ss'),
-                active: true
-            },
-            click: {
-                id: 23,
-                ip: '92.523.32.512',
-                device: 'mobile',
-                country: 'ro',
-                
-            }
+            lead: null
         }
     },
+    async asyncData({ $axios, route }) {
+        try {
+            const { data } = await $axios.get(`advertiser/click/${route.params.leadId}`);
+            return { lead: data};
+        } catch (error) {
+            let _error = error.response.data
+            if(_error.constructor === Array){
+                _error.forEach((error) =>{
+                setTimeout(() => {
+                    this.$notify.error({
+                    title: 'Error',
+                    message: error.message,
+                    });
+                }, 100);
+                })
+            }else{
+                if(this){
+                    this.$notify.error({
+                        title: 'Error',
+                        message: _error.message,
+                    });
+                }
+            }
+        }
+    }
 }
 </script>

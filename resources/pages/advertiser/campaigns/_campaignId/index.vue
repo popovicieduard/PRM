@@ -1,7 +1,7 @@
 <template>
         <el-row>
                 <el-col>
-                        <SingleCampaign :campaign="campaign" :todayLeads="todayLeads"/>
+                        <SingleCampaign v-if="campaign" :campaign="campaign"/>
                 </el-col>
         </el-row>
 </template>
@@ -12,27 +12,42 @@ export default {
         components: {
                 SingleCampaign
         },
-        data() {
-                return {
-                        campaign:{
-                                id: 421321,
-                                title: "Test",
-                                description: "Short 3 page submit No survey traffic",
-                                instructions: "No testerino now please",
-                                image: "https://via.placeholder.com/500",
-                                conversion_goal: "sign-up",
-                                categories: ['b2b', 'ecommerce'],
-                                url: "https://landing.com/?click_id={CLICK_ID}",
-                                countries: ['RO', 'US', 'GB', 'AT'],
-                                devices: ["Mobile", "Desktop"],
-                                commision: 5.22,
-                                cap: 25,
-                                active: true,
-                                tested: true,
-                                removed: false
-                        },
-                        todayLeads: 25,
+        async asyncData({ $axios, params }) {
+            try {
+                const { data } = await $axios.get(
+                    `advertiser/campaign/${params.campaignId}`
+                );
+                return { campaign: data };
+            } catch (error) {
+                let _error = error.response.data
+                if(_error.constructor === Array){
+                    _error.forEach((error) =>{
+                    setTimeout(() => {
+                        this.$notify.error({
+                        title: 'Error',
+                        message: error.message,
+                        });
+                    }, 100);
+                    })
+                }else{
+                    if(this){
+                    this.$notify.error({
+                        title: 'Error',
+                        message: _error.message,
+                    });
+                    }
                 }
+            }
+    },
+    created() {
+        if(!this.campaign || this.campaign.is_removed){
+            this.$router.push({'name': 'advertiser-campaigns'})
         }
+    },
+    data() {
+            return {
+                    campaign: null,
+            }
+    }
 }
 </script>

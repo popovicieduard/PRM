@@ -1,10 +1,10 @@
 'use strict'
 
-class StoreCampaign {
+class UpdateCampaign {
   get rules () {
     return {
       // validation rules
-      'form.title': 'required|string|unique:campaigns,title',
+      'form.title': 'required|string|unique:campaigns,title,id,${form.campaign_id}',
       'form.description': 'required|string',
       'form.conversion_goal': 'required|string',
       'form.categories': 'required|array',
@@ -47,4 +47,4 @@ class StoreCampaign {
   }
 }
 
-module.exports = StoreCampaign
+module.exports = UpdateCampaign

@@ -3,8 +3,6 @@
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Model = use('Model')
 
-const CampaignFilter = use('App/ModelFilters/CampaignFilter')
-
 class Campaign extends Model {
 
     static boot () {
@@ -15,8 +13,6 @@ class Campaign extends Model {
             strategy: 'dbIncrement',
             disableUpdates: false
         })
-
-        this.addTrait('@provider:Filterable', CampaignFilter)
     }
 
     advertiser() {

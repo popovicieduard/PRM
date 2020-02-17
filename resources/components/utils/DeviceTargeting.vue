@@ -1,5 +1,5 @@
 <template>
-    <el-form-item label="Device Targeting">
+    <el-form-item label="Device Targeting"  prop="devices">
         <el-checkbox-group v-model="selected_devices">
             <el-checkbox v-for="device in devices"
                 :key="device.slug"
@@ -12,6 +12,9 @@
 
 <script>
 export default {
+    props: {
+        propDevices: Array
+    },
     data() {
         return {
             devices: [],
@@ -19,14 +22,17 @@ export default {
         }
     },
     created() {
-            this.$axios.get('util/devices')
-                .then((data) => {
-                    let devices = data.data
-                    this.devices = devices
+        this.$axios.get('util/devices')
+            .then((data) => {
+                let devices = data.data
+                this.devices = devices
 
-                })
-                .catch((e) => {
-                })
+            })
+            .catch((e) => {
+            })
+        if(this.propDevices){
+            this.selected_devices = this.propDevices.map(device => device.slug)
+        }
     },
     watch: {
         selected_devices() {

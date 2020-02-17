@@ -16,30 +16,36 @@ export default {
         CampaignTable,
 
     },
+    async asyncData({ $axios }) {
+        try {
+            const { data } = await $axios.get(
+                `advertiser/campaigns`
+            );
+            return { campaigns: data };
+        } catch (error) {
+            let _error = error.response.data
+            if(_error.constructor === Array){
+                _error.forEach((error) =>{
+                setTimeout(() => {
+                    this.$notify.error({
+                    title: 'Error',
+                    message: error.message,
+                    });
+                }, 100);
+                })
+            }else{
+                if(this){
+                this.$notify.error({
+                    title: 'Error',
+                    message: _error.message,
+                });
+                }
+            }
+        }
+    },
     data(){
         return {
-            campaigns:[
-                {
-                    id: 50,
-                    name: 'Short 3 page submit No survey traffic',
-                    clicks: 5,
-                    leads: 20,
-                    spend: 50,
-                    active: false,
-                    tested: true,
-                    removed: false
-                },
-                {
-                    id: 52,
-                    name: 'test',
-                    clicks: 5,
-                    leads: 20,
-                    spend: 50,
-                    active: false,
-                    tested: false,
-                    removed: true
-                }
-            ]
+            campaigns: null
         }
     }
     

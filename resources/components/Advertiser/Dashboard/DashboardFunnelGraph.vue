@@ -58,7 +58,7 @@ export default {
               ['#f32cfb', '#9814fd'], // color set for "Impressions" segment
           ],
           values: [
-            [this.statistics.spend],[this.statistics.clicks],[this.statistics.leads],[(this.statistics.leads / this.statistics.clicks * 100)]
+            [this.statistics.spend],[this.statistics.clicks],[this.statistics.leads],[(this.clicks ? this.statistics.leads / this.statistics.clicks * 100 : 0)]
           ],
           direction: 'horizontal',
           gradientDirection: 'horizontal',
@@ -79,7 +79,6 @@ export default {
 
 <style lang="scss">
     .funnel-graph{
-        min-height: 540px;
         .label__value{
             font-size: 1.1rem !important;
             color: #000 !important;

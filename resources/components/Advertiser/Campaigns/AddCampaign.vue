@@ -5,7 +5,7 @@
     </div>
     <el-row :gutter="12" class="my-2">
       <el-col :span="24" class="mx-auto">
-        <el-form :model="campaign" label-width="180px">
+        <el-form :model="campaign" label-width="180px" :rules="rules" ref="campaign">
           <el-steps :active="steps" finish-status="success" align-center class="my-5" >
             <el-step title="Details"></el-step>
             <el-step title="Settings"></el-step>
@@ -14,10 +14,10 @@
           <el-row class="mx-auto" v-show="steps == 0">
             <el-col :span="18">
               <div class="steps">
-                <el-form-item label="Campaign Title">
+                <el-form-item label="Campaign Title" prop="title">
                   <el-input v-model="campaign.title" placeholder="This will be showed to partners"></el-input>
                 </el-form-item>
-                <el-form-item label="Campaign Description">
+                <el-form-item label="Campaign Description" prop="description">
                   <el-input
                     type="textarea"
                     v-model="campaign.description"
@@ -33,7 +33,7 @@
           <el-row class="mx-auto" v-show="steps == 1">
             <el-col :span="18">
               <div class="steps">
-                <el-form-item label="Conversion Goal">
+                <el-form-item label="Conversion Goal" prop="conversion_goal">
                   <el-select v-model="campaign.conversion_goal" placeholder="Pick a conversion goal">
                     <el-option label="Complete Survey" value="survey"></el-option>
                     <el-option label="Sign-up" value="sign-up"></el-option>
@@ -41,13 +41,8 @@
                   </el-select>
                 </el-form-item>
                 <categories @setCategories="setCategories"/>
-                <el-form-item label="Landing Page">
-                  <el-input
-                    placeholder="https://landing.com/"
-                    v-model="campaign.url"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item>
+                <el-form-item label="Landing Page" prop="url">
+                  <el-input v-model="campaign.url" placeholder="https://landing.com/"></el-input>
                 </el-form-item>
               </div>
             </el-col>
@@ -61,7 +56,7 @@
               <div class="steps">
                 <countries @setCountries="setCountries"/>
                 <devices @setDevices="setDevices"/>
-                <el-form-item label="Commision (USD)">
+                <el-form-item label="Commision (USD)" prop="commision">
                   <el-input-number
                     v-model="campaign.commision"
                     controls-position="right"
@@ -71,7 +66,7 @@
                     :min="0.1"
                   ></el-input-number>
                 </el-form-item>
-                <el-form-item label="Daily Partner Cap">
+                <el-form-item label="Daily Partner Cap" prop="cap">
                   <el-input-number v-model="campaign.cap" :min="20" :step="10"></el-input-number>
                 </el-form-item>
               </div>
@@ -101,7 +96,35 @@ export default {
   },
   data() {
     return {
-      error: null,
+      rules: {
+        title: [
+          { required: true, message: 'Please input the title', trigger: 'blur' },
+        ],
+        description: [
+          { required: true, message: 'Please input some description', trigger: 'blur' }
+        ],
+        conversion_goal: [
+          { required: true, message: 'Please select a conversion goal', trigger: 'blur' }
+        ],
+        categories: [
+          { type: 'array', required: true, message: 'Please select some categories', trigger: 'blur' }
+        ],
+        url: [
+          { required: true, message: 'Please input a URL', trigger: 'blur' }
+        ],
+        countries: [
+          { required: true, message: 'Please select some countries', trigger: 'blur' }
+        ],
+        devices: [
+          { type: 'array', required: true, message: 'Please select some devices', trigger: 'blur' }
+        ],
+        commision: [
+          { required: true, message: 'Please input a commision', trigger: 'blur' }
+        ],
+        cap: [
+          { required: true, message: 'Please input a daily cap', trigger: 'blur' },
+        ],
+      },
       campaign: {
         title: "",
         description: "",
@@ -126,9 +149,22 @@ export default {
     setDevices(devices){
       this.campaign.devices = devices
     },
-    async onSubmit() {
+    onSubmit() {
+      this.$refs['campaign'].validate((valid) => {
+          if (valid) {
+            this.createCampaign()
+          } else {
+            this.$notify.error({
+              title: 'Error',
+              message: 'Check again form fields',
+            });
+            return false;
+          }
+      });
+    },
+    async createCampaign(){
       try {
-        await this.$axios.post('advertiser/create-campaign', {
+        await this.$axios.post('advertiser/campaign', {
           form: {
             title: this.campaign.title,
             description: this.campaign.description,
@@ -144,17 +180,33 @@ export default {
             return qs.stringify(form)
           }
         }).then((data) => {
-          console.log(data)
+          this.$notify({
+            title: 'Success',
+            message: 'Campaign created successfully',
+            type: 'success'
+          });
+
+          this.$router.push({'name': 'advertiser-campaigns'})
         })
       } catch (error) {
-          error.response.data.forEach((error) =>{
-            	setTimeout(() => {
-                this.$notify.error({
-                  title: 'Error',
-                  message: error.message,
+        let _error = error.response.data
+        if(_error.constructor === Array){
+          _error.forEach((error) =>{
+            setTimeout(() => {
+              this.$notify.error({
+                title: 'Error',
+                message: error.message,
                 });
-              }, 100);
+            }, 100);
           })
+        }else{
+          if(this){
+            this.$notify.error({
+              title: 'Error',
+              message: _error.message,
+            });
+          }
+        }
       }
     },
     nextStep(){

@@ -1,5 +1,5 @@
 <template>
-    <el-form-item label="Country Targeting">
+    <el-form-item label="Country Targeting"  prop="countries">
         <el-select
         v-model="selected_countries"
         filterable
@@ -19,6 +19,9 @@
 
 <script>
 export default {
+    props: {
+        propCountries: Array
+    },
     data() {
         return {
             countries: [],
@@ -26,14 +29,17 @@ export default {
         }
     },
     created() {
-            this.$axios.get('util/countries')
-                .then((data) => {
-                    let countries = data.data
-                    this.countries = countries
+        this.$axios.get('util/countries')
+            .then((data) => {
+                let countries = data.data
+                this.countries = countries
 
-                })
-                .catch((e) => {
-                })
+            })
+            .catch((e) => {
+            })
+        if(this.propCountries){
+            this.selected_countries = this.propCountries.map(device => device.code)
+        }
     },
     watch: {
         selected_countries() {

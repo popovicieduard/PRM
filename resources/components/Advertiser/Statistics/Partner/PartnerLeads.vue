@@ -2,21 +2,10 @@
     <div>
         <el-card class="statistics-header" shadow="">
             <el-row>
-                <el-col :xs="24" :sm="8" class="text-center text-md-left my-1">
-                    <span class="h2 text-capitalize">Partner - {{ partner_id }} - Statistics</span>
+                <el-col :xs="24" :sm="12" class="text-center text-md-left my-1">
+                    <span class="h2 text-capitalize">Partner - <span class="text-primary">{{ getPartnerId() }}</span> - Statistics</span>
                 </el-col>
-                <el-col :xs="24" :sm="8" class="text-center text-md-right my-1 pr-4">
-                    <el-tooltip :content="this.partner_status ? 'Allow Partner to generate leads' : 'Block Partner from generating leads'" placement="left" effect="dark">
-                        <el-switch
-                            :value="!partner_status"
-                            active-color="#2dce89"
-                            inactive-color="#f5365c"
-                            @change="changePartnerStatus()"
-                            v-loading="loading">
-                        </el-switch>
-                    </el-tooltip>
-                </el-col>
-                <el-col :xs="24" :sm="8" class="text-center text-md-right upb-date-range">
+                <el-col :xs="24" :sm="12" class="text-center text-md-right upb-date-range">
                     <el-date-picker
                     v-model="currentDate"
                     type="daterange"
@@ -41,16 +30,16 @@
                         {{ scope.row.id }}
                     </router-link>
                 </template>
-                <template slot-scope="scope" slot="campaign-name-slot">
+                <template slot-scope="scope" slot="campaign-id-slot">
                     <router-link :to="{name: 'advertiser-statistics-campaign-campaignId', params: {campaignId: scope.row.campaign_id}}" class="text-capitalize">
-                        {{ scope.row.campaign_name.length > 30 ? scope.row.campaign_id + ' / ' + scope.row.campaign_name.substring(0, 30) + '...' : scope.row.campaign_id + ' / ' + scope.row.campaign_name }}
+                        {{scope.row.campaign_id }}
                     </router-link>
                 </template>
                 <template slot-scope="scope" slot="cost-slot">
                     <span class="text-success font-weight-bold">{{ scope.row.cost | numFormat('0,0.00') }} $</span>
                 </template>
                 <template slot-scope="scope" slot="active-slot">
-                    <el-tag effect="dark" size="mini" :type="scope.row.active ? 'success' : 'danger' " class="text-capitalize">{{ scope.row.active ? 'active' : 'cancelled' }}</el-tag>
+                    <el-tag effect="dark" size="mini" :type="scope.row.is_active ? 'success' : 'danger' " class="text-capitalize">{{ scope.row.is_active ? 'active' : 'cancelled' }}</el-tag>
                 </template>
             </el-table-wrapper>
         </el-card>
@@ -59,35 +48,25 @@
 
 <script>
 import moment from 'moment'
+import qs from 'qs'
 
 export default {
     props: {
-        partner_id: {
-            type: Number,
-            required: true
-        },
         leads: {
-            type: Array,
+            type: Array | null,
             required: true
         },
-        is_blocked: {
-            type: Boolean,
-            required: true
-        }
     },
     data() {
         return {
-            partner_status: this.is_blocked,
             loading: false,
-            currentDate: [moment().startOf('month'), moment().endOf('month')],
+            currentDate: [moment().startOf('month').format(), moment().endOf('month').format()],
             leadTableData: this.leads,
             leadColumns: [
                 {
                     prop: 'id', label: 'Lead ID', wdith: 100, scopedSlot: 'lead-id-slot'
                 }, {
-                    prop: 'click_id', label: 'Click ID',
-                },{
-                    prop: 'campaign_name', label: 'Campaign ID / Name', width: 280, scopedSlot: 'campaign-name-slot' ,
+                    prop: 'campaign_id', label: 'Campaign ID', width: 280, scopedSlot: 'campaign-id-slot' ,
                 }, {
                     prop: 'cost', label: 'Cost', width: 80, scopedSlot: 'cost-slot',
                 }, {
@@ -107,68 +86,70 @@ export default {
                      {
                         text: 'Today',
                         onClick(picker) {
-                        picker.$emit('pick', [moment().startOf('day'), moment().endOf('day')]);
+                        picker.$emit('pick', [moment().startOf('day').format(), moment().endOf('day').format()]);
                         }
                     }, {
                         text: 'Yesterday',
                         onClick(picker) {
-                        picker.$emit('pick', [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')]);
+                        picker.$emit('pick', [moment().subtract(1, 'days').startOf('day').format(), moment().subtract(1, 'days').endOf('day').format()]);
                         }
                     }, {
                         text: 'This month',
                         onClick(picker) {
-                        picker.$emit('pick', [moment().startOf('month'), moment().endOf('month')]);
+                        picker.$emit('pick', [moment().startOf('month').format(), moment().endOf('month').format()]);
                         }
                     }, {
                         text: 'Last month',
                         onClick(picker) {
-                        picker.$emit('pick', [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')]);
+                        picker.$emit('pick', [moment().subtract(1, 'months').startOf('month').format(), moment().subtract(1, 'months').endOf('month').format()]);
                         }
                     }
                 ]
             },
         }
     },
-    created(){
-        this.loading = true;
-        setTimeout(() => {
-            this.loading = false;
-        }, 2000);
-    },
     methods: {
-        changeDateRange(){
-            this.loading = true;
-            setTimeout(() => {
-                this.loading = false;                
-            }, 2000);
+        getPartnerId(){
+            return parseInt(this.$route.params.partnerId)
         },
-        changeStatus(){
-            return this.partner_status = !this.partner_status;
-        },
-        changePartnerStatus(){
-            var confirmType = this.partner_status ? 'success' : 'error';
-            var confirmMessage = this.partner_status ? 'Allow Partner to generate leads ?' : 'Block Partner from generating leads ?';
-
-            var messageType = this.partner_status ? 'Parnter Activated' : 'Partner added to Black-list';
-
-            this.$confirm(confirmMessage, 'Info', {
-                    confirmButtonText: 'OK',
-                    cancelButtonText: 'Cancel',
-                    type: confirmType
-            }).then(() => {
+        async changeDateRange(){
+            try {
                 this.loading = true;
-                setTimeout(() => {
-                    this.$notify({
-                        type: confirmType,
-                        message: messageType
-                    });
-                    this.changeStatus();
+                await this.$axios.get('advertiser/clicks', {
+                    params: {
+                        between: this.currentDate,
+                        partner: this.getPartnerId()
+                    },
+                    paramsSerializer: params => {
+                        return qs.stringify(params)
+                    }
+                }).then((data) => {
+                    let clicks = data.data
+                    this.leadTableData = clicks
                     this.loading = false;
-                }, 2000);
-            }).catch(() => {
-        
-            });
-        }
+                })
+            } catch (error) {
+                this.loading = false;
+                let _error = error.response.data
+                if(_error.constructor === Array){
+                    _error.forEach((error) =>{
+                    setTimeout(() => {
+                        this.$notify.error({
+                        title: 'Error',
+                        message: error.message,
+                        });
+                    }, 100);
+                    })
+                }else{
+                    if(this){
+                    this.$notify.error({
+                        title: 'Error',
+                        message: _error.message,
+                    });
+                    }
+                }
+            }
+        },
     },
 }
 </script>

@@ -80,26 +80,26 @@ export default {
 
           this.$router.push({'name': user.role})
           
-        }).catch((error) => {
-          this.error = error.response.data
-          if(this.error.constructor === Array){
-            this.error.forEach((error) =>{
-                setTimeout(() => {
-                  this.$notify.error({
-                    title: 'Error',
-                    message: error.message,
+        })
+      } catch (error) {
+          let _error = error.response.data
+          if(_error.constructor === Array){
+            _error.forEach((error) =>{
+              setTimeout(() => {
+                this.$notify.error({
+                  title: 'Error',
+                  message: error.message,
                   });
-                }, 100);
+              }, 100);
             })
           }else{
-            this.$notify.error({
-              title: 'Error',
-              message: this.error.message,
-            });
+            if(this){
+              this.$notify.error({
+                title: 'Error',
+                message: _error.message,
+              });
+            }
           }
-        });
-      } catch (error) {
-        console.log(error)
       }
     },
   },
