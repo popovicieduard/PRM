@@ -32,7 +32,7 @@
                             <el-row>
                                 <el-col :span="18">
                                     <h5 class="card-row__title">Advertisers</h5>
-                                    <h3 class="card-row__numbers"></h3>
+                                    <h3 class="card-row__numbers">{{networkStats.advertisers}}</h3>
                                 </el-col>
                                 <el-col :span="6" class="text-center">
                                     <i class="icon-advertisers"></i>
@@ -45,7 +45,7 @@
                             <el-row>
                                 <el-col :span="18">
                                     <h5 class="card-row__title">Partners</h5>
-                                    <h3 class="card-row__numbers"></h3>
+                                    <h3 class="card-row__numbers">{{networkStats.partners}}</h3>
                                 </el-col>
                                 <el-col :span="6" class="text-center">
                                     <i class="icon-partners"></i>
@@ -58,7 +58,7 @@
                             <el-row>
                                 <el-col :span="18">
                                     <h5 class="card-row__title">Active Campaigns</h5>
-                                    <h3 class="card-row__numbers"></h3>
+                                    <h3 class="card-row__numbers">{{networkStats.campaigns}}</h3>
                                 </el-col>
                                 <el-col :span="6" class="text-center">
                                     <i class="icon-campaigns"></i>
@@ -77,21 +77,14 @@ import moment from 'moment'
 export default {
     props: {
         networkStats: {
-            type: Object,
+            type: Object | null,
             required: true
         },
         loading: {
             type: Boolean,
             required: true
         },
-    },
-    created(){
-        this.$emit('loading')
-        
-        setTimeout(() => {
-            this.$emit('loading')
-        }, 2000);
-    },
+    }
 }
 </script>
 

@@ -58,7 +58,7 @@ export default {
               ['#f32cfb', '#9814fd'], // color set for "Impressions" segment
           ],
           values: [
-            [this.statistics.spend],[this.statistics.clicks],[this.statistics.leads],[(this.clicks ? this.statistics.leads / this.statistics.clicks * 100 : 0)]
+            [this.statistics.spend],[this.statistics.clicks],[this.statistics.leads],[(this.statistics.clicks ? this.statistics.leads / this.statistics.clicks * 100 : 0)]
           ],
           direction: 'horizontal',
           gradientDirection: 'horizontal',

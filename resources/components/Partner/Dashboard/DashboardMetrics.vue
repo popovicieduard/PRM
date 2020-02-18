@@ -15,7 +15,7 @@
                     end-placeholder="End date"
                     format="dd MMM yyyy"
                     :picker-options="pickerOptions"
-                    @change="changeDateRange">
+                    @change="changeDateRange"
                     >
                     </el-date-picker>
                 </el-col>
@@ -23,7 +23,7 @@
         </div>        
         <el-row :gutter="12" class="card-row">
             <el-col :span="24">
-                <h4 class="font-weight-bold">Statistics for: {{ dateRange ? $moment(dateRange[0]).format('DD MMMM YYYY') + ' - ' +  $moment(dateRange[1]).format('DD MMMM YYYY') : ''}} </h4>
+                <h4 class="font-weight-bold">Statistics for: {{ dateRange ? $moment(dateRange[0]).format('DD MMMM YYYY') + ' - ' + $moment(dateRange[1]).format('DD MMMM YYYY') : ''}}</h4>
             </el-col>
             <el-col :span="24" v-if="loading">
                 <el-row :gutter="12">
@@ -59,7 +59,7 @@
                         <el-card shadow="hover">
                             <el-row>
                                 <el-col :span="18">
-                                    <h5 class="card-row__title">Earnings</h5>
+                                    <h5 class="card-row__title">Spend</h5>
                                     <h3 class="card-row__numbers text-success">{{ statistics.earnings | numFormat('0,0.00') }} USD</h3>
                                 </el-col>
                                 <el-col :span="6" class="text-center">
@@ -99,7 +99,7 @@
                             <el-row>
                                 <el-col :span="18">
                                     <h5 class="card-row__title">Conversion Rate</h5>
-                                    <h3 class="card-row__numbers">{{ (statistics.leads / statistics.clicks * 100).toFixed(2) }}%</h3>
+                                    <h3 class="card-row__numbers">{{ statistics.clicks ? (statistics.leads / statistics.clicks * 100).toFixed(2) : 0 }}%</h3>
                                 </el-col>
                                 <el-col :span="6" class="text-center">
                                     <i class="icon-conversion"></i>
@@ -115,69 +115,52 @@
 
 <script>
 import moment from 'moment'
+
 export default {
     props: {
         statistics: {
-            type: Object,
+            type: Object | null,
             required: true
         },
         loading: {
             type: Boolean,
             required: true
-        },
-        date: {
-            type: Array,
-            required: true
         }
     },
     data(){
         return {
-            dateRange: this.date,
+            dateRange: [moment().startOf('month').format(), moment().endOf('month').format()],
             pickerOptions: {
                 shortcuts: [
                      {
                         text: 'Today',
                         onClick(picker) {
-                        picker.$emit('pick', [moment().startOf('day'), moment().endOf('day')]);
+                        picker.$emit('pick', [moment().startOf('day').format(), moment().endOf('day').format()]);
                         }
                     }, {
                         text: 'Yesterday',
                         onClick(picker) {
-                        picker.$emit('pick', [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')]);
+                        picker.$emit('pick', [moment().subtract(1, 'days').startOf('day').format(), moment().subtract(1, 'days').endOf('day').format()]);
                         }
                     }, {
                         text: 'This month',
                         onClick(picker) {
-                        picker.$emit('pick', [moment().startOf('month'), moment().endOf('month')]);
+                        picker.$emit('pick', [moment().startOf('month').format(), moment().endOf('month').format()]);
                         }
                     }, {
                         text: 'Last month',
                         onClick(picker) {
-                        picker.$emit('pick', [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')]);
+                        picker.$emit('pick', [moment().subtract(1, 'months').startOf('month').format(), moment().subtract(1, 'months').endOf('month').format()]);
                         }
                     }
                 ]
             },
         };
     },
-    created(){
-        this.$emit('loading')
-        
-        setTimeout(() => {
-            this.$emit('loading')
-        }, 2000);
-    },
     methods: {
-        changeDateRange(event){
-            var dateRange = event;
-            if(event){
-                this.$emit('loading')
-                this.$emit('changeDate', dateRange)
-                
-                setTimeout(() => {
-                    this.$emit('loading')
-                }, 2000);
-            }
+        changeDateRange(){
+            this.$emit('loading')
+            this.$emit('changeDate', this.dateRange)
         }
     },
 }

@@ -94,7 +94,7 @@ class AdvertiserController {
         }
     }
 
-    async allCampaigns({auth, response}) {
+    async getCampaigns({auth, response}) {
 
         let user = await auth.getUser()
 
@@ -208,16 +208,15 @@ class AdvertiserController {
         }
     }
 
-    async clicks({request, auth, response}) {
+    async getClicks({request, auth, response}) {
 
         let user = await auth.getUser()
 
         try {
 
-            let user_campaigns = (await Campaign.query()
+            let user_campaigns = await Campaign.query()
             .where('user_id', user.id)
-            .fetch())
-            .toJSON().map(campaign => campaign.id)
+            .pluck('id')
 
             let clicks = await Click.query()
                 .whereIn('campaign_id', user_campaigns)

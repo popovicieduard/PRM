@@ -19,29 +19,32 @@ export default {
     },
     data(){
         return {
-            advertisers:[
-                {
-                    id: 50,
-                    username: 'nothing',
-                    company_name: 'MaxBounty',
-                    first_name: 'first name',
-                    last_name: 'last name',
-                    email: 'eduard@test.com',
-                    created_at: moment().format('DD MMM YYYY - HH:mm:ss'),
-                    active: true,
-
-                }, {
-                    id: 51,
-                    username: 'test',
-                    company_name: 'Test2',
-                    first_name: 'first name',
-                    last_name: 'second name',
-                    email: 'test@test.com',
-                    created_at: moment().format('DD MMM YYYY - HH:mm:ss'),
-                    active: false,
-
-                },
-            ]
+            advertisers: null
+        }
+    },
+    async asyncData({ $axios }) {
+        try {
+            const { data } = await $axios.get(`network/advertisers`);
+            return { advertisers: data};
+        } catch (error) {
+            let _error = error.response.data
+            if(_error.constructor === Array){
+                _error.forEach((error) =>{
+                setTimeout(() => {
+                    this.$notify.error({
+                    title: 'Error',
+                    message: error.message,
+                    });
+                }, 100);
+                })
+            }else{
+                if(this){
+                    this.$notify.error({
+                        title: 'Error',
+                        message: _error.message,
+                    });
+                }
+            }
         }
     }
     

@@ -1,19 +1,20 @@
 'use strict'
 
 const Campaign = use('App/Models/Campaign')
-const Category = use('App/Models/Category')
-const Country = use('App/Models/Country')
-const Device = use('App/Models/Device')
-const Database = use('Database')
+const User = use('App/Models/User')
 const Click = use('App/Models/Click')
 const moment = use('moment')
+const _ = use('lodash')
 
 class NetworkController {
 
-    async allCampaigns({ response }) {
+    async getCampaigns({ response }) {
 
         try {
-            const campaigns = await Campaign.all()
+            const campaigns = await Campaign.query()
+            .with('categories')
+            .with('countries')
+            .fetch()
 
             return response.json(campaigns)
         }
@@ -44,7 +45,7 @@ class NetworkController {
         }
     }
 
-    async deleteCampaign({response}) {
+    async deleteCampaign({response, params}) {
 
         try {
             let campaign = await Campaign
@@ -64,12 +65,10 @@ class NetworkController {
         }
     }
 
-    async clicks({request,response}) {
+    async getClicks({request,response}) {
 
         try {
             let clicks = await Click.query()
-                .where('created_at', '>', moment().startOf('month').format("YYYY-MM-DD HH:mm:ss"))
-                .where('created_at', '<', moment().endOf('month').format("YYYY-MM-DD HH:mm:ss"))
                 .filter(request.all())
                 .fetch()
 
@@ -92,6 +91,93 @@ class NetworkController {
                 .first()
 
             return response.json(click)
+        }
+        catch (e) {
+            return response.status(400).json({message: 'Error occured'})
+        }
+    }
+
+    async statsCount({response}) {
+
+        try {
+            let users = await User.query()
+                .where('is_active', 1)
+                .with('roles')
+                .fetch()
+
+            let activeCampaigns = await Campaign.query()
+                .where('is_active', 1)
+                .getCount()
+
+            let partners = users.toJSON().filter((partner) => {
+                if (partner.roles.length){
+                    return _.first(partner.roles).slug == 'partner'
+                }
+                return []
+            }).length
+
+            let advertisers = users.toJSON().filter((advertiser) => {
+                if (advertiser.roles.length){
+                    return _.first(advertiser.roles).slug == 'advertiser'
+                }
+                return []
+            }).length 
+
+            const stats = {
+                advertisers: advertisers,
+                partners: partners,
+                campaigns: activeCampaigns
+            }
+
+            return response.json(stats)
+        }
+        catch (e) {
+            return response.status(400).json({message: 'Error occured'})
+        }
+    }
+
+    async getPartners({response}){
+        try {
+
+            let partners = await User.query()
+                .whereHas('roles', (builder) => {
+                    builder.where('slug', 'partner')
+                })
+                .fetch()
+            
+            return response.json(partners)
+        } catch (error) {
+            return response.status(400).json({message: 'Error occured'})
+        }
+    }
+
+    async getAdvertisers({response}){
+        try {
+
+            let advertisers = await User.query()
+                .whereHas('roles', (builder) => {
+                    builder.where('slug', 'advertiser')
+                })
+                .fetch()
+            
+            return response.json(advertisers)
+        } catch (error) {
+            return response.status(400).json({message: 'Error occured'})
+        }
+    }
+
+    async updateUserStatus({request, params, response}){
+        let { status } = request.all();
+
+        try {
+
+            let user = await User.findOrFail(params.userId)
+
+            user.is_active = status
+
+            await user.save()
+
+            return response.json(user)
         }
         catch (e) {
             return response.status(400).json({message: 'Error occured'})

@@ -33,22 +33,6 @@
         <span class="menu-item__title d-none d-lg-inline">Advertisers</span>
       </el-menu-item>
       <el-menu-item
-        index="network-statistics"
-        :route="{name: 'network-statistics'}"
-        class="menu-item text-lg-left text-center"
-      >
-        <i class="icon-statistics"></i>
-        <span class="menu-item__title d-none d-lg-inline">Statistics</span>
-      </el-menu-item>
-      <!-- <el-menu-item
-        index="network-payments"
-        :route="{name: 'network-payments'}"
-        class="menu-item text-lg-left text-center"
-      >
-        <div class="icon-payments"></div>
-        <span class="menu-item__title d-none d-lg-inline">Payments</span>
-      </el-menu-item> -->
-      <el-menu-item
         index="network-settings"
         :route="{name: 'network-settings'}"
         class="menu-item text-lg-left text-center"

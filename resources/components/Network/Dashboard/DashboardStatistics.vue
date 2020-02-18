@@ -4,7 +4,6 @@
             <el-col :span="24">
                 <DashboardMetrics
                 :statistics="statistics"
-                :date="date"
                 @changeDate="changeDate"
                 @loading="changeLoading"
                 :loading="loading"
@@ -32,10 +31,12 @@
 </template>
 
 <script>
-import moment from 'moment'
 import DashboardMetrics from '@/components/Network/Dashboard/DashboardMetrics';
 import DashboardNetworkStats from '@/components/Network/Dashboard/DashboardNetworkStats';
 import DashboardFunnelGraph from '@/components/Network/Dashboard/DashboardFunnelGraph';
+import moment from 'moment'
+import qs from 'qs'
+
 
 export default {
     components: {
@@ -45,11 +46,11 @@ export default {
     },
     props: {
         stats: {
-            type: Object,
+            type: Object | null,
             required: true
         },
         networkStats: {
-            type: Object,
+            type: Object | null,
             required: true
         }
     },
@@ -58,7 +59,6 @@ export default {
             loading: false,
             statistics: this.stats,
             networkStatistics: this.networkStats,
-            date: [moment().startOf('month'), moment().endOf('month')],
             dateKey: null
         }
     },
@@ -66,15 +66,44 @@ export default {
         changeLoading(){
             this.loading = !this.loading;
         },
-        changeDate(date){
-            if(this.date){
-                this.date = date;
-                this.dateKey = date[1] / date[0];
+        async changeDate(date){
+            try {
+                const { data } = await this.$axios.get(`network/clicks`, {
+                    params: {
+                        between: date
+                    },
+                    paramsSerializer: params => {
+                        return qs.stringify(params)
+                    }
+                });
+                const leads = data.filter(click => click.is_lead == 1 && click.is_active == 1).length
+                const clicks = data.length
+                const spend = data.filter(click => click.is_lead == 1 && click.is_active == 1).reduce((a, b) => +a + +b.cost, 0)
+                this.changeLoading()
                 this.statistics = {
-                    clicks: 50,
-                    commisions: 50,
-                    clicks: 30,
-                    leads: 2,
+                    clicks: clicks,
+                    leads: leads,
+                    spend: spend 
+                }
+                this.dateKey = moment(date[1]).valueOf() / moment(date[0]).valueOf()
+            } catch (error) {
+                let _error = error.response.data
+                if(_error.constructor === Array){
+                    _error.forEach((error) =>{
+                    setTimeout(() => {
+                        this.$notify.error({
+                        title: 'Error',
+                        message: error.message,
+                        });
+                    }, 100);
+                    })
+                }else{
+                    if(this){
+                        this.$notify.error({
+                            title: 'Error',
+                            message: _error.message,
+                        });
+                    }
                 }
             }
         }

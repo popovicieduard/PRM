@@ -23,11 +23,12 @@
 
 <script>
 import moment from 'moment'
+import _ from 'lodash'
 
 export default {
   props: {
     statistics: {
-      type: Object,
+      type: Object | null,
       required: true
     },
     loading: {
@@ -44,15 +45,15 @@ export default {
       series: [
         {
           name: "Clicks",
-          data: [30, 40, 28, 51, 42, 109, 100,32, 44, 32, 34, 1,]
+          data: []
         },
         {
           name: "Leads",
-          data: [11, 32, 45, 32, 34, 52, 41, 32, 32, 25, 61, 2,]
+          data: []
         },
         {
           name: "Earnings",
-          data: [61, 12, 85, 62, 44, 22.22, 11,32, 45, 56, 32, 6,]
+          data: []
         },
 
       ],
@@ -148,6 +149,25 @@ export default {
   mounted() {
     var element = document.getElementById("graph");
     this.width = element.offsetWidth - 30;
+  },
+  created() {
+    _.map(this.grouped, (element, index) => {
+      var clicks = element.length
+      var leads = element.filter(click => click.is_lead == 1 && click.is_active == 1).length
+      var earnings = element.filter(click => click.is_lead == 1 && click.is_active == 1).reduce((a, b) => +a + +b.cost, 0)
+
+      this.series[0].data.push(clicks)
+      this.series[1].data.push(leads)
+      this.series[2].data.push(earnings)
+    })
+  },
+  computed: {
+    grouped(){
+      return _.groupBy(this.statistics, click => moment(click.created_at).format('YYYY-MM-DD'))
+    },
+    getClicks(){
+      console.log(statistics)
+    }
   },
   methods: {
     graphDateRange(startDate, endDate) {

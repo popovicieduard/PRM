@@ -35,11 +35,14 @@ Route.group('utils', () => {
 
 Route.group('network', () => {
     //network administrator 
-    Route.get('network/campaigns', 'NetworkController.allCampaigns')
+    Route.get('network/campaigns', 'NetworkController.getCampaigns')
     Route.get('network/campaign/:campaignId', 'NetworkController.findCampaign')
     Route.delete('network/campaign/:campaignId', 'NetworkController.deleteCampaign')
-    Route.get('network/clicks', 'NetworkController.clicks')
-    Route.get('network/click/:clickId', 'NetworkController.findClick')
+    Route.get('network/clicks', 'NetworkController.getClicks')
+    Route.get('network/stats', 'NetworkController.statsCount')
+    Route.get('network/partners', 'NetworkController.getPartners')
+    Route.get('network/advertisers', 'NetworkController.getAdvertisers')
+    Route.patch('network/user/status/:userId', 'NetworkController.updateUserStatus')
     
 }).prefix('api').middleware(['auth', 'is:network']);
 
@@ -47,15 +50,23 @@ Route.group('advertiser', () => {
     //advertiser
     Route.post('advertiser/campaign', 'AdvertiserController.createCampaign').validator("StoreCampaign");
     Route.patch('advertiser/campaign/:campaignId', 'AdvertiserController.updateCampaign').validator("UpdateCampaign");
-    Route.get('advertiser/campaigns', 'AdvertiserController.allCampaigns')
+    Route.get('advertiser/campaigns', 'AdvertiserController.getCampaigns')
     Route.get('advertiser/campaign/:campaignId', 'AdvertiserController.findCampaign')
     Route.delete('advertiser/campaign/:campaignId', 'AdvertiserController.deleteCampaign')
     Route.patch('advertiser/campaign/status/:campaignId', 'AdvertiserController.updateCampaignStatus')
-    Route.get('advertiser/clicks', 'AdvertiserController.clicks')
+    Route.get('advertiser/clicks', 'AdvertiserController.getClicks')
     Route.get('advertiser/click/:clickId', 'AdvertiserController.findClick')
     
 }).prefix('api').middleware(['auth', 'is:advertiser']);
 
+Route.group('partner', () => {
+    //partner
+    Route.get('partner/campaigns', 'PartnerController.getCampaigns')
+    Route.get('partner/campaign/:campaignId', 'PartnerController.findCampaign')
+    Route.get('partner/clicks', 'PartnerController.getClicks')
+    Route.get('partner/graph', 'PartnerController.getGraph')
+    
+}).prefix('api').middleware(['auth', 'is:partner']);
 
 Route.any('*', 'NuxtController.render')
 

@@ -1,19 +1,17 @@
 <template>
-    <el-form-item label="Campaign Categories"  prop="categories">
-        <el-select
-        v-model="selected_categories"
-        multiple
-        collapse-tags
-        placeholder="Select Categories"
-        >
-        <el-option
-            v-for="category in categories"
-            :key="category.value"
-            :label="category.name"
-            :value="category.slug"
-        ></el-option>
-        </el-select>
-    </el-form-item>
+    <el-select
+    v-model="selected_categories"
+    multiple
+    collapse-tags
+    placeholder="Select Categories"
+    >
+    <el-option
+        v-for="category in categories"
+        :key="category.value"
+        :label="category.name"
+        :value="category.slug"
+    ></el-option>
+    </el-select>
 </template>
 
 <script>
@@ -37,7 +35,7 @@ export default {
             .catch((e) => {
             })
         if(this.propCategories){
-            this.selected_categories = this.propCategories.map(device => device.slug)
+            this.selected_categories = this.propCategories.map(category => category.slug)
         }
     },
     watch: {

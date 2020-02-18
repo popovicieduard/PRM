@@ -40,7 +40,9 @@
                     <el-option label="Purchase" value="purchase"></el-option>
                   </el-select>
                 </el-form-item>
-                <categories @setCategories="setCategories" :propCategories="campaign.categories"/>
+                <el-form-item label="Campaign Categories" prop="categories">
+                  <categories @setCategories="setCategories" :propCategories="campaign.categories"/>
+                </el-form-item>
                 <el-form-item label="Landing Page" prop="url">
                   <el-input v-model="campaign.url" placeholder="https://landing.com/"></el-input>
                 </el-form-item>
@@ -54,8 +56,12 @@
           <el-row class="mx-auto" v-show="steps == 2">
             <el-col :span="24">
               <div class="steps">
-                <countries @setCountries="setCountries" :propCountries="campaign.countries"/>
-                <devices @setDevices="setDevices" :propDevices="campaign.devices"/>
+                <el-form-item label="Country Targeting"  prop="countries">
+                  <countries @setCountries="setCountries" :propCountries="campaign.countries"/>
+                </el-form-item>
+                <el-form-item label="Device Targeting"  prop="devices">
+                  <devices @setDevices="setDevices" :propDevices="campaign.devices"/>
+                </el-form-item>
                 <el-form-item label="Commision (USD)" prop="commision">
                   <el-input-number
                     v-model="campaign.commision"

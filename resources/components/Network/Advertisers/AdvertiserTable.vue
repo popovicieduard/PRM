@@ -8,7 +8,7 @@
                             <h2 class="text-capitalize my-1">Filter</h2>
                         </el-col>
                         <el-col :span="12">
-                            <el-button type="primary" size="mini" class="float-right" @click="filterAdvertiser">Filter</el-button>
+                            <el-button type="primary" size="mini" class="float-right" @click="filterAdvertisers">Filter</el-button>
                         </el-col>
                     </el-row>
                 </div>
@@ -30,15 +30,22 @@
                     <el-col :span="24">
                         <el-table-wrapper v-loading="loading" :data="tableData" :columns="columns" :pagination="pagination">
                             <template slot-scope="scope" slot="username-slot">
-                                <router-link :to="{name: 'network-advertisers-advertiserId', params: {advertiserId: scope.row.id}}" class="text-capitalize">
-                                    {{ scope.row.username.length > 30 ? scope.row.username.substring(0, 30) + '...' : scope.row.username }}
-                                </router-link>
+                                {{ scope.row.username.length > 30 ? scope.row.username.substring(0, 30) + '...' : scope.row.username }}
                             </template> 
                             <template slot-scope="scope" slot="join_date-slot">
                                 {{ scope.row.created_at }}
                             </template>
                             <template slot-scope="scope" slot="active-slot">
-                                <el-tag effect="dark" size="mini" :type="scope.row.active == true ? 'success' : 'danger' " class="text-capitalize">{{ scope.row.active == true ? 'Active' : 'Inactive' }}</el-tag>
+                                <el-tag effect="dark" size="mini" :type="scope.row.is_active == true ? 'success' : 'danger' " class="text-capitalize">{{ scope.row.is_active == true ? 'Active' : 'Inactive' }}</el-tag>
+                            </template>
+                            <template slot-scope="scope" slot="status-slot"> 
+                                <el-tooltip content="Activate / Deactivate Advertiser" placement="left" class="float-right">
+                                    <el-switch
+                                        :value="getUserActiveStatus(scope.row.id)"
+                                        active-color="#2dce89"
+                                        @change="changeUserActiveStatus(scope.row.id)">
+                                    </el-switch>
+                                </el-tooltip>
                             </template>
                         </el-table-wrapper>
                     </el-col>
@@ -69,14 +76,14 @@ export default {
                 }, {
                     prop: 'username', label: 'Username', scopedSlot: 'username-slot'
                 }, {
-                    prop: 'company_name', label: 'Company'
-                }, {
                     prop: 'email', label: 'Email', width: 160, scopedSlot: 'email-slot'
                 }, {
                     prop: 'created_at', label: 'Join Date', width: 180, scopedSlot: 'join_date-slot', sortable: true,
                 }, {
                     prop: 'active', label: 'Active ?', width: 100, scopedSlot: 'active-slot'
-                },
+                }, {
+                    prop: 'status', label: '', width: 60, scopedSlot: 'status-slot'
+                }
                 
             ],
             pagination: {
@@ -96,9 +103,59 @@ export default {
             return advertisers.filter(advertiser => 
                 advertiser.username.toLowerCase().indexOf(search.toLowerCase()) > -1
              || advertiser.email.toLowerCase().indexOf(search.toLowerCase()) > -1
-             || advertiser.first_name.toLowerCase().indexOf(search.toLowerCase()) > -1
-             || advertiser.last_name.toLowerCase().indexOf(search.toLowerCase()) > -1
              );
+        },
+        getUserActiveStatus(id){
+            return this.advertisers.find(advertiser => advertiser.id === id).is_active ? true : false;
+        },
+        setUserActiveStatus(id, payLoad){
+            return this.advertisers.find(advertiser => advertiser.id === id).is_active = payLoad;
+        },
+        async changeUserActiveStatus(id){
+
+            var userStatus = this.getUserActiveStatus(id)
+
+            var userStatusMessage = userStatus ? 'Advertiser has been deactivated' : "Advertiser has been activated";
+            var userStatusType = userStatus ? 'info' : 'success';
+
+            try {
+                this.loading = true;
+                await this.$axios.patch(
+                    `network/user/status/${id}`, {
+                        status: !userStatus,
+                    }
+                ).then((data) => {
+                    let user = data.data
+
+                    this.setUserActiveStatus(user.id, !userStatus)
+                    this.$notify({
+                        message: userStatusMessage,
+                        type: userStatusType
+                    });
+                    this.loading = false;
+                    
+                })
+            } catch (error) {
+                this.loading = false;
+                let _error = error.response.data
+                if(_error.constructor === Array){
+                    _error.forEach((error) =>{
+                    setTimeout(() => {
+                        this.$notify.error({
+                        title: 'Error',
+                        message: error.message,
+                        });
+                    }, 100);
+                    })
+                }else{
+                    if(this){
+                    this.$notify.error({
+                        title: 'Error',
+                        message: _error.message,
+                    });
+                    }
+                }
+            }
         },
     }
 }

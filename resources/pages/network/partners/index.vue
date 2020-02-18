@@ -19,29 +19,33 @@ export default {
     },
     data(){
         return {
-            partners:[
-                {
-                    id: 50,
-                    username: 'nothing',
-                    first_name: 'first name',
-                    last_name: 'last name',
-                    email: 'eduard@test.com',
-                    created_at: moment().format('DD MMM YYYY - HH:mm:ss'),
-                    active: true,
-
-                }, {
-                    id: 51,
-                    username: 'test',
-                    first_name: 'first name',
-                    last_name: 'second name',
-                    email: 'test@test.com',
-                    created_at: moment().format('DD MMM YYYY - HH:mm:ss'),
-                    active: false,
-
-                },
-            ]
+            partners: null
+        }
+    },
+    async asyncData({ $axios }) {
+        try {
+            const { data } = await $axios.get(`network/partners`);
+            return { partners: data};
+        } catch (error) {
+            let _error = error.response.data
+            if(_error.constructor === Array){
+                _error.forEach((error) =>{
+                setTimeout(() => {
+                    this.$notify.error({
+                    title: 'Error',
+                    message: error.message,
+                    });
+                }, 100);
+                })
+            }else{
+                if(this){
+                    this.$notify.error({
+                        title: 'Error',
+                        message: _error.message,
+                    });
+                }
+            }
         }
     }
-    
 }
 </script>

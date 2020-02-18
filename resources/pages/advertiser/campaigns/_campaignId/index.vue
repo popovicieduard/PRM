@@ -12,10 +12,10 @@ export default {
         components: {
                 SingleCampaign
         },
-        async asyncData({ $axios, params }) {
+        async asyncData({ $axios, route }) {
             try {
                 const { data } = await $axios.get(
-                    `advertiser/campaign/${params.campaignId}`
+                    `advertiser/campaign/${route.params.campaignId}`
                 );
                 return { campaign: data };
             } catch (error) {

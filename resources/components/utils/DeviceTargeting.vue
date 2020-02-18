@@ -1,13 +1,11 @@
 <template>
-    <el-form-item label="Device Targeting"  prop="devices">
-        <el-checkbox-group v-model="selected_devices">
-            <el-checkbox v-for="device in devices"
-                :key="device.slug"
-                :label="device.slug"
-            >
-            </el-checkbox>
-        </el-checkbox-group>
-    </el-form-item>
+    <el-checkbox-group v-model="selected_devices">
+        <el-checkbox v-for="device in devices"
+            :key="device.slug"
+            :label="device.slug"
+        >
+        </el-checkbox>
+    </el-checkbox-group>
 </template>
 
 <script>
