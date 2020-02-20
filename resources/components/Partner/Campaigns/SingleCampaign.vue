@@ -2,7 +2,7 @@
     <el-card>
         <div slot="header">
             <el-row>
-                <el-col :xs="24" :sm="24" class="my-1">
+                <el-col :xs="24" :sm="12" class="my-1">
                     <span class="h2">Campaign - <span class="text-primary">{{ campaign.id }}</span></span>
                 </el-col>
             </el-row>
@@ -10,11 +10,6 @@
         <el-row :gutter="36">
             <el-col :span="12">
                 <el-card shadow="never" :body-style="{ padding: '0px' }">
-                    <el-image class="image" :src="campaign.image" fit="cover">
-                        <div slot="error" class="image-slot mt-5">
-                            <h5 class="text-center">Not Found</h5>
-                        </div>
-                    </el-image>
                     <div style="padding: 14px;">
                         <h1 class="text-capitalize">{{ campaign.title }}</h1>
                         <hr>
@@ -23,7 +18,7 @@
                                     <span class="h4">Categories:</span>
                                 </el-col>
                                 <el-col :span="14">
-                                    <el-tag v-for="category in campaign.categories" :key="category" class="mx-1 my-1 text-capitalize" size="small" effect="plain">{{ category }}</el-tag>                                    
+                                    <el-tag v-for="category in campaign.categories" :key="category.name" class="mx-1 my-1 text-capitalize" size="small" effect="plain">{{ category.name }}</el-tag>                                    
                                 </el-col>
                             </el-row>
                             <hr>
@@ -32,7 +27,7 @@
                                     <span class="h4">Devices:</span>                                    
                                 </el-col>
                                 <el-col :span="14">
-                                    <el-tag v-for="device in campaign.devices" :key="device" class="mx-1 my-1 text-capitalize" size="small" effect="plain">{{ device }}</el-tag>                                    
+                                    <el-tag v-for="device in campaign.devices" :key="device.name" class="mx-1 my-1 text-capitalize" size="small" effect="plain">{{ device.name }}</el-tag>                                    
                                 </el-col>
                             </el-row>
                             <hr>
@@ -50,7 +45,7 @@
                                     <span class="h4">Countries:</span>                                    
                                 </el-col>
                                 <el-col :span="14">
-                                    <el-tag v-for="country in campaign.countries" :key="country" class="mx-1 my-1 text-capitalize" size="small" effect="plain">{{ country | country }}</el-tag>                                                                    
+                                    <el-tag v-for="country in campaign.countries" :key="country.name" class="mx-1 my-1 text-capitalize" size="small" effect="plain">{{ country.name | country }}</el-tag>                                                                    
                                 </el-col>
                             </el-row>
                             <hr>
@@ -59,7 +54,7 @@
                                     <span class="h4">Landing Page</span>                               
                                 </el-col>
                                 <el-col :span="14" class="mt-1">
-                                    <span class="font-weight-bold h4"><i class="el-icon-view view-landing-page" @click="goToLanding"></i> {{ landingPageUrl }}</span>                                                                                                     
+                                    <span class="font-weight-bold h4"><i class="el-icon-link text-primary go-to-landing" @click="goToLanding"></i> {{ landingPageUrl }}</span>                                                                                                     
                                 </el-col>
                             </el-row>
                             <hr>
@@ -97,20 +92,10 @@
                 <el-row class="my-4">
                     <el-col :span="24">
                         <el-card shadow="never">
-                                <div slot="header">
-                                    <h4 class="mb-0">Campaign Instructions</h4>
-                                </div>
-                            <h3 class="text-capitalize">{{ campaign.instructions }}</h3>
-                        </el-card>
-                    </el-col>
-                </el-row>
-                <el-row class="my-4">
-                    <el-col :span="24">
-                        <el-card shadow="never">
                             <div slot="header">
                                 <h4 class="text-center mb-0">Daily Cap</h4>
                             </div>
-                            <el-progress :text-inside="true" :stroke-width="15" :percentage="(todayLeads / campaign.cap) * 100" :format="format"></el-progress>
+                            <el-progress :text-inside="true" :stroke-width="15" :percentage="(campaign.__meta__.clicks_count / campaign.cap) * 100" :format="format"></el-progress>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -128,8 +113,6 @@
                                 Copy to Clipboard
                             </el-button>
                             <el-input v-model="trackUrl"></el-input>
-                            <el-alert type="info" :closable="false" class="my-2" :description="'Example: ' + trackUrl + '?s1={S1}&s2={S2}&s3={S3}&s4={S4}&s5={S5}'" title="Optional Parameters: Tracking parameters can be passed to the tracking URL for postback lead tracking, replace the {S#} with your values, (s1=tracking_value_1, s2=tracking_value_2, etc...) .">
-                            </el-alert>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -139,24 +122,17 @@
 </template>
 
 <script>
+import moment from 'moment'
     export default {
         props: {
             campaign:{
-                type: Object,
+                type: Object | null,
                 required: true
             },
-            todayLeads:{
-                type: Number,
-                required: true
-            },
-            partner: {
-                type: Object,
-                required: true
-            }
         },
         computed: {
             trackUrl(){
-                return this.$store.getters['auth/getDomain'] + "/api/track/" +  this.partner.id + "/" + this.campaign.id
+                return this.$store.getters['auth/getDomain'] + "/api/track/" + this.$store.getters['auth/getAuthInstance'].id + '/' +  this.campaign.id
             },
             landingPageUrl(){
                 return this.campaign.url;
@@ -165,10 +141,10 @@
         methods: {
             format(percentage) {
                 if(this.campaign.cap <= this.todayLeads){
-                    this.todayLeads = this.campaign.cap;
+                    this.campaign.__meta__.clicks_count = this.campaign.cap;
                     return 'Capped';
                 }
-                return percentage === 100 ? 'Capped' : this.todayLeads + ' / ' + this.campaign.cap;
+                return percentage === 100 ? 'Capped' : this.campaign.__meta__.clicks_count + ' / ' + this.campaign.cap;
             },
             onCopy: function (e) {
                 this.$message({
@@ -193,12 +169,12 @@
         height: 250px;
     }
 
-    .el-progress__text{
-        font-size: 12px !important;
+    .go-to-landing{
+        cursor: pointer;
     }
 
-    .view-landing-page{
-        cursor: pointer;
+    .el-progress__text{
+        font-size: 12px !important;
     }
 
 </style>

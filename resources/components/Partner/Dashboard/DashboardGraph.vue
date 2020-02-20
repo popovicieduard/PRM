@@ -158,7 +158,7 @@ export default {
 
       this.series[0].data.push(clicks)
       this.series[1].data.push(leads)
-      this.series[2].data.push(earnings)
+      this.series[2].data.push(earnings.toFixed(2))
     })
   },
   computed: {

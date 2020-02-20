@@ -41,25 +41,24 @@ export default {
                 graph: data
             };
         } catch (error) {
-            console.log(error)
-            // let _error = error.response.data
-            // if(_error.constructor === Array){
-            //     _error.forEach((error) =>{
-            //     setTimeout(() => {
-            //         this.$notify.error({
-            //         title: 'Error',
-            //         message: error.message,
-            //         });
-            //     }, 100);
-            //     })
-            // }else{
-            //     if(this){
-            //         this.$notify.error({
-            //             title: 'Error',
-            //             message: _error.message,
-            //         });
-            //     }
-            // }
+            let _error = error.response.data
+            if(_error.constructor === Array){
+                _error.forEach((error) =>{
+                setTimeout(() => {
+                    this.$notify.error({
+                    title: 'Error',
+                    message: error.message,
+                    });
+                }, 100);
+                })
+            }else{
+                if(this){
+                    this.$notify.error({
+                        title: 'Error',
+                        message: _error.message,
+                    });
+                }
+            }
         }
     }
 }

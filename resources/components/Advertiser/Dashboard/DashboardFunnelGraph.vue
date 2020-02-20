@@ -27,7 +27,7 @@
         </div>
         <div v-else class="my-2">
             <client-only>
-                <vue-funnel-graph v-if="sum > 0 && width != ''" :width="width" :height="height" :labels="labels"
+                <vue-funnel-graph v-if="statistics.clicks > 0 && width != ''" :width="width" :height="height" :labels="labels"
                     :values="values" :colors="colors" :direction="direction"
                     :gradient-direction="gradientDirection"
                     :animated="true" :display-percentage="false"
@@ -52,7 +52,6 @@ export default {
     },
     data() {
       return {
-          sum: null,
           labels: ['Spend - $', 'Clicks', 'Leads', 'Conversion Rate - %'],
           colors: [
               ['#f32cfb', '#9814fd'], // color set for "Impressions" segment
@@ -68,12 +67,9 @@ export default {
       };
     },
     mounted(){
-        this.sum = this.values.reduce(function (a,b){
-            return a + b
-        }, 0);
         var element =  document.getElementById('funnel-graph');
         this.width = element.offsetWidth - 100;
-    }
+    },
 }
 </script>
 

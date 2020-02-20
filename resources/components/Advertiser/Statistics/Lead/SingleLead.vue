@@ -82,9 +82,7 @@
                         prop: 'ip_address', label: 'IP', width: 120
                     }, {
                         prop: 'created_at', label: 'Date', width: 180, sortable: true,
-                    }, {
-                        prop: 'active', label: 'Status', width: 100, scopedSlot: 'active-slot', sortable: true,
-                    },
+                    }
                 ],
             }
         }

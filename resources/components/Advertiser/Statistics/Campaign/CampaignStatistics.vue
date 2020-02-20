@@ -173,7 +173,8 @@ export default {
                     }
                 }).then((data) => {
                     let clicks = data.data
-                    this.leadTableData = clicks
+                    let leads = clicks.filter(click => click.is_lead == 1 && click.is_active == 1)
+                    this.leadTableData = leads
                     const grouped = _.groupBy(clicks, click => click.user_id);
                     this.partnerTableData = grouped
                     this.loading = false;

@@ -7,7 +7,7 @@
             </el-col>
             <el-col :xs="24" :sm="12" class="text-center text-md-right upb-date-range">
                 <el-date-picker
-                v-model="date"
+                v-model="currentDate"
                 type="daterange"
                 align="right"
                 unlink-panels
@@ -29,22 +29,22 @@
                 {{ scope.row.id }}
             </template>
             <template slot-scope="scope" slot="campaign-name-slot">
-                {{ scope.row.campaign_name.length > 30 ? scope.row.campaign_id + ' / ' + scope.row.campaign_name.substring(0, 30) + '...' : scope.row.campaign_id + ' / ' + scope.row.campaign_name }}
+                <span class="text-capitalize">
+                    {{ scope.row.campaign.title.length > 30 ? scope.row.campaign_id + ' / ' + scope.row.campaign.title.substring(0, 30) + '...' : scope.row.campaign_id + ' / ' + scope.row.campaign.title }}
+                </span>
             </template>
             <template slot-scope="scope" slot="earnings-slot">
                 <span class="text-success font-weight-bold">{{ scope.row.cost | numFormat('0,0.00') }} $</span>
             </template>
             <template slot-scope="scope" slot="country-slot">
-                    <country-flag :country='scope.row.country' size='small'/>
-                    {{ scope.row.country | country() }}
+                <el-tooltip class="item" effect="dark" :content="scope.row.country.name" placement="top">
+                    <span><country-flag :country='scope.row.country.code' size='normal'/></span>
+                </el-tooltip>
             </template>
             <template slot-scope="scope" slot="device-slot">
                 <el-tag size="small">
-                    <span class="font-weight-bold text-capitalize">{{ scope.row.device }}</span>
+                    <span class="font-weight-bold text-capitalize">{{ scope.row.device.name }}</span>
                 </el-tag>
-            </template>
-            <template slot-scope="scope" slot="active-slot">
-                <el-tag effect="dark" size="mini" :type="scope.row.active ? 'success' : 'danger' " class="text-capitalize">{{ scope.row.active ? 'active' : 'cancelled' }}</el-tag>
             </template>
         </el-table-wrapper>
     </el-card>
@@ -53,6 +53,7 @@
 
 <script>
 import moment from 'moment'
+import qs from 'qs'
 
 export default {
     props: {
@@ -64,7 +65,7 @@ export default {
     data() {
         return {
             loading: false,
-            date: [moment().startOf('month'), moment().endOf('month')],
+            currentDate: [moment().startOf('month'), moment().endOf('month')],
             leadTableData: this.leads,
             leadColumns: [
                 {
@@ -79,9 +80,7 @@ export default {
                     prop: 'Device', label: 'Device', scopedSlot: 'device-slot',
                 }, {
                     prop: 'created_at', label: 'Date', width: 180, sortable: true,
-                }, {
-                    prop: 'active', label: 'Status', width: 100, scopedSlot: 'active-slot', sortable: true,
-                },
+                }
             ],
             pagination: {
                 pageSize: 10,
@@ -92,40 +91,66 @@ export default {
                      {
                         text: 'Today',
                         onClick(picker) {
-                        picker.$emit('pick', [moment().startOf('day'), moment().endOf('day')]);
+                        picker.$emit('pick', [moment().startOf('day').format(), moment().endOf('day').format()]);
                         }
                     }, {
                         text: 'Yesterday',
                         onClick(picker) {
-                        picker.$emit('pick', [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')]);
+                        picker.$emit('pick', [moment().subtract(1, 'days').startOf('day').format(), moment().subtract(1, 'days').endOf('day').format()]);
                         }
                     }, {
                         text: 'This month',
                         onClick(picker) {
-                        picker.$emit('pick', [moment().startOf('month'), moment().endOf('month')]);
+                        picker.$emit('pick', [moment().startOf('month').format(), moment().endOf('month').format()]);
                         }
                     }, {
                         text: 'Last month',
                         onClick(picker) {
-                        picker.$emit('pick', [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')]);
+                        picker.$emit('pick', [moment().subtract(1, 'months').startOf('month').format(), moment().subtract(1, 'months').endOf('month').format()]);
                         }
                     }
                 ]
             },
         }
     },
-    created(){
-        this.loading = true;
-        setTimeout(() => {
-            this.loading = false;
-        }, 2000);
-    },
     methods: {
-        changeDateRange(){
-            this.loading = true;
-            setTimeout(() => {
-                this.loading = false;                
-            }, 2000);
+        async changeDateRange(){
+            try {
+                this.loading = true;
+                await this.$axios.get('partner/clicks', {
+                    params: {
+                        between: this.currentDate
+                    },
+                    paramsSerializer: params => {
+                        return qs.stringify(params)
+                    }
+                }).then((data) => {
+                    let clicks = data.data
+                    let leads = clicks.filter(click => click.is_lead == 1 && click.is_active == 1)
+                    this.leadTableData = leads
+                    this.loading = false;
+                })
+            } catch (error) {
+                this.loading = false;
+                let _error = error.response.data
+                if(_error.constructor === Array){
+                    _error.forEach((error) =>{
+                    setTimeout(() => {
+                        this.$notify.error({
+                        title: 'Error',
+                        message: error.message,
+                        });
+                    }, 100);
+                    })
+                }else{
+                    if(this){
+                    this.$notify.error({
+                        title: 'Error',
+                        message: _error.message,
+                    });
+                    }
+                }
+            }
         },
     },
 }

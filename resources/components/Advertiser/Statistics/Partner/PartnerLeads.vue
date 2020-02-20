@@ -38,9 +38,6 @@
                 <template slot-scope="scope" slot="cost-slot">
                     <span class="text-success font-weight-bold">{{ scope.row.cost | numFormat('0,0.00') }} $</span>
                 </template>
-                <template slot-scope="scope" slot="active-slot">
-                    <el-tag effect="dark" size="mini" :type="scope.row.is_active ? 'success' : 'danger' " class="text-capitalize">{{ scope.row.is_active ? 'active' : 'cancelled' }}</el-tag>
-                </template>
             </el-table-wrapper>
         </el-card>
     </div>
@@ -73,9 +70,7 @@ export default {
                     prop: 'ip_address', label: 'IP', width: 120
                 }, {
                     prop: 'created_at', label: 'Date', width: 180, sortable: true,
-                }, {
-                    prop: 'active', label: 'Status', width: 100, scopedSlot: 'active-slot', sortable: true,
-                },
+                }
             ],
             pagination: {
                 pageSize: 10,
@@ -124,8 +119,8 @@ export default {
                         return qs.stringify(params)
                     }
                 }).then((data) => {
-                    let clicks = data.data
-                    this.leadTableData = clicks
+                    let leads = data.data.filter(click => click.is_lead == 1 && click.is_active == 1)
+                    this.leadTableData = leads
                     this.loading = false;
                 })
             } catch (error) {

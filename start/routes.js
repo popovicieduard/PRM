@@ -64,9 +64,15 @@ Route.group('partner', () => {
     Route.get('partner/campaigns', 'PartnerController.getCampaigns')
     Route.get('partner/campaign/:campaignId', 'PartnerController.findCampaign')
     Route.get('partner/clicks', 'PartnerController.getClicks')
-    Route.get('partner/graph', 'PartnerController.getGraph')
     
 }).prefix('api').middleware(['auth', 'is:partner']);
+
+Route.group('track', () => {
+    //Track and postback
+    Route.get('track/:partnerId/:campaignId', 'ClickController.track')
+    Route.post('postback/:campaignId/:clickId', 'ClickController.postback')
+
+}).prefix('api');
 
 Route.any('*', 'NuxtController.render')
 

@@ -8,7 +8,7 @@
                             <h2 class="text-capitalize my-1">Filter</h2>
                         </el-col>
                         <el-col :span="12">
-                            <el-button type="primary" class="float-right" size="mini" @click="filterCampaigns">Filter</el-button>
+                            <el-button type="primary" size="mini" class="float-right" @click="filterCampaigns">Filter</el-button>
                         </el-col>
                     </el-row>
                 </div>
@@ -17,36 +17,10 @@
                 </el-input>
                 <hr>
                 <h4>Countries</h4>
-                <el-select
-                v-model="filter.countries"
-                filterable
-                multiple
-                collapse-tags
-                placeholder="Select Countries"
-                >
-                    <el-option
-                        v-for="country in countries"
-                        :key="country.value"
-                        :label="country.label"
-                        :value="country.value"
-                    ></el-option>
-                </el-select>
+                <countries @setCountries="setCountries"/>
                 <hr>
                 <h4>Categories</h4>
-                <el-select
-                v-model="filter.categories"
-                filterable
-                multiple
-                collapse-tags
-                placeholder="Select Categories"
-                >
-                    <el-option
-                        v-for="category in categories"
-                        :key="category.value"
-                        :label="category.label"
-                        :value="category.value"
-                    ></el-option>
-                </el-select>
+                <categories @setCategories="setCategories"/>
             </el-card>
         </el-col>
         <el-col :span="19">
@@ -61,19 +35,20 @@
                 <el-row :gutter="12">
                     <el-col :span="24">
                         <el-table-wrapper v-loading="loading" :data="tableData" :columns="columns" :pagination="pagination">
-                            <template slot-scope="scope" slot="name-slot">
-                                <router-link :to="{name: 'partner-campaigns-campaignId', params: {campaignId: scope.row.id}}" class="text-capitalize">
-                                    {{ scope.row.name.length > 30 ? scope.row.name.substring(0, 30) + '...' : scope.row.name }}
+                            <template slot-scope="scope" slot="title-slot">
+                                <router-link v-if="!scope.row.is_removed" :to="{name: 'partner-campaigns-campaignId', params: {campaignId: scope.row.id}}" class="text-capitalize">
+                                    {{ scope.row.title.length > 30 ? scope.row.title.substring(0, 30) + '...' : scope.row.title }}
                                 </router-link>
+                                <span class="text-capitalize" v-else >{{ scope.row.title.length > 30 ? scope.row.title.substring(0, 30) + '...' : scope.row.title }}</span>
                             </template>
                             <template slot-scope="scope" slot="conversion_goal-slot">
                                 <el-tag effect="dark" size="mini" type="primary" class="text-capitalize">{{ scope.row.conversion_goal }}</el-tag>
                             </template>
-                            <template slot-scope="scope" slot="rate-slot">
-                                <span class="text-success font-weight-bold">{{ scope.row.rate | numFormat('0,0.00') }} $</span>
+                            <template slot-scope="scope" slot="commision-slot">
+                                <span class="text-success font-weight-bold">{{ scope.row.commision | numFormat('0,0.00') }} $</span>
                             </template>
-                            <template slot-scope="scope" slot="epc-slot">
-                                <span>{{ scope.row.epc | numFormat('0,0.00') }}</span>
+                            <template slot-scope="scope" slot="active-slot">
+                                <el-tag effect="dark" size="mini" :type="scope.row.is_removed ? 'danger' : (scope.row.is_active ? 'success' : 'warning')" :class="{ 'bg-muted': !scope.row.is_active, 'text-capitalize': true }">{{ scope.row.is_removed ? 'removed' : (scope.row.is_active ? 'live' : 'paused') }}</el-tag>
                             </template>
                         </el-table-wrapper>
                     </el-col>
@@ -82,22 +57,23 @@
         </el-col>
     </el-row>
 </template>
-
 <script>
-import CountrySelect from '@/components/utils/CountrySelect';
-import CampaignCategories from '@/components/utils/CampaignCategories';
+import Categories from "@/components/utils/CampaignCategories";
+import Countries from "@/components/utils/CountrySelect";
 
 export default {
+    components: {
+        Categories,
+        Countries,
+    },
     props: {
         campaigns: {
-            type: Array,
+            type: Array | null,
             required: true
         }
     },
     data() {
         return {
-            countries: CountrySelect.data,
-            categories: CampaignCategories.data,
             tableData: this.campaigns,
             filter: {
                 search: '',
@@ -109,14 +85,14 @@ export default {
                 {
                     prop: 'id', label: 'Campaign ID', width: 130
                 }, {
-                    prop: 'name', label: 'Name',  width: 280, scopedSlot: 'name-slot'
+                    prop: 'title', label: 'Title',  width: 280, scopedSlot: 'title-slot'
                 }, {
                     prop: 'conversion_goal', label: 'Conversion Goal', scopedSlot: 'conversion_goal-slot'
                 }, {
-                    prop: 'rate', label: 'Rate', width: 140, scopedSlot: 'rate-slot', sortable: true,
-                }, {
-                    prop: 'epc', label: 'EPC', width: 100, scopedSlot: 'epc-slot', sortable: true,
-                }, 
+                    prop: 'commision', label: 'Commision', width: 140, scopedSlot: 'commision-slot', sortable: true,
+                },  {
+                    prop: 'is_active', label: 'Status', width: 140, scopedSlot: 'active-slot', sortable: true,
+                }
                 
             ],
             pagination: {
@@ -128,20 +104,26 @@ export default {
 
     methods: {
         filterCampaigns(){
-            this.tableData = this.filterByCategory(this.filtereByCountry(this.filterBySearch(this.campaigns, this.filter.search), this.filter.countries), this.filter.categories)
+            this.tableData = this.filterByCategory(this.filterByCountry(this.filterBySearch(this.campaigns, this.filter.search), this.filter.countries), this.filter.categories)
         },
         filterBySearch(campaigns, keyword){
             const search = keyword.trim();
             if(!search.length) return campaigns;
-            return campaigns.filter(campaign => campaign.name.toLowerCase().indexOf(search.toLowerCase()) > -1);
+            return campaigns.filter(campaign => campaign.title.toLowerCase().indexOf(search.toLowerCase()) > -1);
         },
         filterByCategory(campaigns, categories){
             if(!categories.length) return campaigns;
-            return campaigns.filter(campaign => campaign.categories.find(category => categories.includes(category)))
+            return campaigns.filter(campaign => campaign.categories.find(category => categories.includes(category.slug)))
         },
-        filtereByCountry(campaigns, countries){
+        filterByCountry(campaigns, countries){
             if(!countries.length) return campaigns;
-            return campaigns.filter(campaign => campaign.countries.find(country => countries.includes(country)));
+            return campaigns.filter(campaign => campaign.countries.find(country => countries.includes(country.code)));
+        },
+        setCategories(categories){
+            this.filter.categories = categories
+        },
+        setCountries(countries){
+            this.filter.countries = countries
         }
     }
 }

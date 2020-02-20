@@ -39,7 +39,9 @@ const namedMiddleware = {
   auth: 'Adonis/Middleware/Auth',
   is: 'Adonis/Acl/Is',
   can: 'Adonis/Acl/Can',
-  verifyPassword: "App/Middleware/VerifyPassword"
+  verifyPassword: "App/Middleware/VerifyPassword",
+  clickTargeting: "App/Middleware/ClickTargeting"
+
 }
 
 /*

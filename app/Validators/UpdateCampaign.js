@@ -2,9 +2,12 @@
 
 class UpdateCampaign {
   get rules () {
+
+    const campaignId = this.ctx.params.campaignId
+
     return {
       // validation rules
-      'form.title': 'required|string|unique:campaigns,title,id,${form.campaign_id}',
+      'form.title': `required|string|unique:campaigns,title,id,${campaignId}`,
       'form.description': 'required|string',
       'form.conversion_goal': 'required|string',
       'form.categories': 'required|array',

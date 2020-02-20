@@ -1,16 +1,27 @@
 <template>
-        <el-row>
-                <el-col>
-                        <SingleCampaign v-if="campaign" :campaign="campaign"/>
-                </el-col>
-        </el-row>
+    <el-row>
+        <el-col>
+            <SingleCampaign v-if="campaign" :campaign="campaign"/>
+        </el-col>
+    </el-row>
 </template>
 
 <script>
 import SingleCampaign from '@/components/Network/Campaigns/SingleCampaign'
+
 export default {
         components: {
-                SingleCampaign
+            SingleCampaign
+        },
+        created() {
+            if(!this.campaign){
+                this.$router.push({'name': 'network-campaigns'})
+            }
+        },
+        data() {
+            return {
+                    campaign: null,
+            }
         },
         async asyncData({ $axios, route }) {
             try {
@@ -38,16 +49,6 @@ export default {
                     }
                 }
             }
-    },
-    created() {
-        if(!this.campaign){
-            this.$router.push({'name': 'network-campaigns'})
-        }
-    },
-    data() {
-            return {
-                    campaign: null,
-            }
-    }
+        },
 }
 </script>

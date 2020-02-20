@@ -62,7 +62,7 @@ export default {
                 });
                 const leads = data.filter(click => click.is_lead == 1 && click.is_active == 1).length
                 const clicks = data.length
-                const spend = data.filter(click => click.is_lead == 1 && click.is_active == 1).reduce((a, b) => +a + +b.cost, 0)
+                const spend = data.filter(click => click.is_lead == 1 && click.is_active == 1).reduce((a, b) => a + b.cost, 0)
                 this.changeLoading()
                 this.statistics = {
                     clicks: clicks,

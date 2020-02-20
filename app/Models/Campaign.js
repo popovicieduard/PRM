@@ -15,6 +15,14 @@ class Campaign extends Model {
         })
     }
 
+    setUrl(url){
+        if(!(/^((http|https|ftp):\/\/)/.test(url))){
+          let httpsUrl = "https://" + url;
+          return httpsUrl
+        }
+        return url
+    }
+
     advertiser() {
         return this.belongsTo("App/Models/User");
     }

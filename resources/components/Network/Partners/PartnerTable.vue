@@ -80,8 +80,6 @@ export default {
                 }, {
                     prop: 'created_at', label: 'Join Date', width: 180, scopedSlot: 'join_date-slot', sortable: true,
                 }, {
-                    prop: 'active', label: 'Active ?', width: 100, scopedSlot: 'active-slot'
-                }, {
                     prop: 'status', label: '', width: 60, scopedSlot: 'status-slot'
                 }
                 

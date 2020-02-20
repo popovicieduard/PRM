@@ -12,9 +12,9 @@ class NetworkController {
 
         try {
             const campaigns = await Campaign.query()
-            .with('categories')
-            .with('countries')
-            .fetch()
+                .with('categories')
+                .with('countries')
+                .fetch()
 
             return response.json(campaigns)
         }
@@ -33,6 +33,7 @@ class NetworkController {
             .with('countries')
             .with('devices')
             .withCount('clicks', (builder) => {
+                builder.where('is_lead', 1)
                 builder.where('created_at', '>', moment().startOf('day').format("YYYY-MM-DD HH:mm:ss"))
                 builder.where('created_at', '<', moment().endOf('day').format("YYYY-MM-DD HH:mm:ss"))
             })
