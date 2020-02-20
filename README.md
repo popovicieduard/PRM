@@ -7,7 +7,7 @@
 $ npm i --global @adonisjs/cli
 
 # install dependencies
-$ npm run install
+$ npm install
 
 # make a copy of .env.example to .env and setup your mysql username and password in .env
 $ cp .env.example .env
