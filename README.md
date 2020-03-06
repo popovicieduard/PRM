@@ -1,12 +1,22 @@
-# adonuxt
-
-> My magnificent Nuxt.js project
+# PRM - Partner relationship management Platform
 
 ## Build Setup
 
 ``` bash
+# install adonis cli
+$ npm i --global @adonisjs/cli
+
 # install dependencies
-$ npm run install
+$ npm install
+
+# make a copy of .env.example to .env and setup your mysql username and password in .env
+$ cp .env.example .env
+
+# generate adonis key with command
+$ adonis key:generate
+
+# run the migration and seed
+$ adonis migration:run --seed
 
 # serve with hot reload at localhost:3000
 $ npm run dev
@@ -19,4 +29,16 @@ $ npm run start
 $ npm run generate
 ```
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+There are 3 roles with 3 independent interfaces
+
+Administrator:
+username: network@test.com
+password: testtest
+
+Advertiser:
+username: advertiser@test.com
+password: testtest
+
+Partner:
+username: partner@test.com
+password: testtest
