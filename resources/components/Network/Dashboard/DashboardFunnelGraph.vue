@@ -33,7 +33,7 @@
                     :animated="true" :display-percentage="false"
                 ></vue-funnel-graph>
             </client-only>
-            <h3 class="text-center font-weight-700 text-muted" v-if="sum <= 0">No Data</h3>
+            <h3 class="text-center font-weight-700 text-muted" v-if="statistics.clicks <= 0">No Data</h3>
         </div>
     </el-card>
 </template>

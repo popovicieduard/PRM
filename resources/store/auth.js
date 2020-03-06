@@ -13,7 +13,7 @@ export const mutations = {
         this.$cookies.set('x-access-token', auth_token)
     },
     SET_AUTH_INSTANCE(state, auth_instance){
-        state.auth_instance = auth_instance.data
+        state.auth_instance = auth_instance
     },
     LOGOUT(state){
         state.auth_token = null
@@ -29,8 +29,7 @@ export const actions = {
     setAuthToken({commit}, auth_token){
         commit('SET_AUTH_TOKEN', auth_token)
     },
-    async setAuthInstance({commit}){
-        let auth_instance = await this.$axios.get('auth/me')
+    setAuthInstance({commit}, auth_instance){
         commit('SET_AUTH_INSTANCE', auth_instance)
     },
     logout({commit}){

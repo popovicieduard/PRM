@@ -4,10 +4,4 @@ export default function ({ $axios, store }) {
       config.headers.common['Authorization'] = `Bearer ${store.state.auth.auth_token}`;
     }
   })
-  $axios.onResponse((response) => {
-    return response
-  },
-  (error) => {
-    return Promise.reject(error);
-  })
 }

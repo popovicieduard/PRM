@@ -44,7 +44,11 @@ export default {
   },
   created() {
     if(this.$store.getters['auth/getAuthToken']){
-      this.$router.push({'name': this.$store.getters['auth/getAuthInstance'].role})
+      if(this.$store.getters['auth/getAuthInstance']){
+        if(this.$store.getters['auth/getAuthInstance'].role){
+          this.$router.push({'name': this.$store.getters['auth/getAuthInstance'].role})
+        }
+      }
     }
   },
   methods: {

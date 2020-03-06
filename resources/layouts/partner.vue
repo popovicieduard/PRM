@@ -30,9 +30,11 @@ export default {
     $route: {
         immediate: true,
         handler(to, from) {
-            if (!this.$store.state.auth.auth_token || this.$store.state.auth.auth_instance.role != 'partner') {
+          if (!this.$store.state.auth.auth_token) {
+            if(this.$store.getters['auth/getAuthInstance'].role){
               return this.$router.push({'name': 'auth-login'});
             }
+          }
         }
     }
   },
