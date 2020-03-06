@@ -28,3 +28,17 @@ $ npm run start
 # generate static project
 $ npm run generate
 ```
+
+There are 3 roles with 3 independent interfaces
+
+Administrator:
+username: network@test.com
+password: testtest
+
+Advertiser:
+username: advertiser@test.com
+password: testtest
+
+Partner:
+username: partner@test.com
+password: testtest
