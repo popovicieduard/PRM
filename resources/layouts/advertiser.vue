@@ -28,14 +28,16 @@ export default {
   transition: "page",
   watch: {
     $route: {
-        immediate: true,
-        handler(to, from) {
-          if (!this.$store.state.auth.auth_token) {
+      immediate: true,
+      handler(to, from) {
+        if (!this.$store.getters['auth/getAuthToken']) {
+          if(this.$store.getters['auth/getAuthInstance']){
             if(this.$store.getters['auth/getAuthInstance'].role){
               return this.$router.push({'name': 'auth-login'});
             }
           }
         }
+      }
     }
   },
 };

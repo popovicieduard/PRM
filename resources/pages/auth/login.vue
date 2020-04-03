@@ -43,10 +43,12 @@ export default {
     }
   },
   created() {
-    if(this.$store.getters['auth/getAuthToken']){
-      if(this.$store.getters['auth/getAuthInstance']){
-        if(this.$store.getters['auth/getAuthInstance'].role){
-          this.$router.push({'name': this.$store.getters['auth/getAuthInstance'].role})
+    const token = this.$store.getters['auth/getAuthToken']
+    if(token){
+      const instance = this.$store.getters['auth/getAuthInstance']
+      if(instance){
+        if(instance.role){
+          this.$router.push({'name': instance.role})
         }
       }
     }
