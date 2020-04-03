@@ -39,17 +39,17 @@ export const actions = {
 
             switch(auth_route){
                 case 'network':
-                    if (!store.state.auth.auth_token || !store.state.auth.auth_instance.role != 'network') {
+                    if (!store.state.auth.auth_token || store.state.auth.auth_instance.role != 'network') {
                         return redirect({'name': 'auth-login'});
                     }
                 break;
                 case 'advertiser':
-                    if (!store.state.auth.auth_token || !store.state.auth.auth_instance.role != 'advertiser') {
+                    if (!store.state.auth.auth_token || store.state.auth.auth_instance.role != 'advertiser') {
                         return redirect({'name': 'auth-login'});
                     }
                 break;
                 case 'partner':
-                    if (!store.state.auth.auth_token || !store.state.auth.auth_instance.role != 'network') {
+                    if (!store.state.auth.auth_token || store.state.auth.auth_instance.role != 'partner') {
                         return redirect({'name': 'auth-login'});
                     }
                 break;

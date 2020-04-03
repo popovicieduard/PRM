@@ -16,11 +16,11 @@ const Role = use('Role')
 
 class CreateAdministratorSeeder {
   async run () {
-    const roleNetwork = new Role()
-    roleNetwork.name = 'Network'
-    roleNetwork.slug = 'network'
-    roleNetwork.description = 'manage network privileges'
-    await roleNetwork.save()
+    const roleAdministrator = new Role()
+    roleAdministrator.name = 'Administrator'
+    roleAdministrator.slug = 'administrator'
+    roleAdministrator.description = 'manage administrator privileges'
+    await roleAdministrator.save()
 
     const roleAdvertiser = new Role()
     roleAdvertiser.name = 'Advertiser'
@@ -34,23 +34,28 @@ class CreateAdministratorSeeder {
     rolePartner.description = 'manage partner privileges'
     await rolePartner.save()
 
-    const network = await User.create({
-      username: 'network',
-      email: 'network@test.com',
+    const administrator = await User.create({
+      username: 'administrator',
+      email: 'administrator@test.com',
       password: 'testtest',
     })
+
     const partner = await User.create({
       username: 'partner',
       email: 'partner@test.com',
       password: 'testtest',
     })
+
     const advertiser = await User.create({
       username: 'advertiser',
       email: 'advertiser@test.com',
       password: 'testtest',
     })
-    await network.roles().attach([roleNetwork.id])
+
+    await administrator.roles().attach([roleAdministrator.id])
+
     await partner.roles().attach([rolePartner.id])
+
     await advertiser.roles().attach([roleAdvertiser.id])
   }
 }

@@ -44,7 +44,7 @@ Route.group('network', () => {
     Route.get('network/advertisers', 'NetworkController.getAdvertisers')
     Route.patch('network/user/status/:userId', 'NetworkController.updateUserStatus')
     
-}).prefix('api').middleware(['auth', 'is:network']);
+}).prefix('api').middleware(['auth', 'is:administrator']);
 
 Route.group('advertiser', () => {
     //advertiser
