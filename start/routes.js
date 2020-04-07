@@ -70,7 +70,7 @@ Route.group('partner', () => {
 Route.group('track', () => {
     //Track and postback
     Route.get('track/:partnerId/:campaignId', 'ClickController.track')
-    Route.post('postback/:campaignId/:clickId', 'ClickController.postback')
+    Route.post('postback/:clickId', 'ClickController.postback')
 
 }).prefix('api');
 

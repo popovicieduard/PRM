@@ -34,7 +34,7 @@ class ClickController {
             campaignDevice = 'mobile'
         }
 
-        // try {
+        try {
             const partner = await User.findBy('id', params.partnerId)
 
             const country = await Country.findBy('code', countryCode)
@@ -46,9 +46,13 @@ class ClickController {
                 .with('countries')
                 .with('devices')
                 .first()
+            
+            if(!campaign){
+                return response.status(400).json({message: 'Campaign not found'})
+            }
 
             const dailyClicks = await Click.query()
-                .where('user_id', partner.id)
+                .where('campaign_id', campaign.id)
                 .whereBetween('created_at', [moment().startOf('day').format("YYYY-MM-DD HH:mm:ss"), moment().endOf('day').format("YYYY-MM-DD HH:mm:ss")])
                 .getCount()
 
@@ -82,22 +86,16 @@ class ClickController {
 
             return response.redirect(trackURL)
 
-        // }
-        // catch (e) {
-        //     return response.status(400).json({message: 'Error occured'})
-        // }
+        }
+        catch (e) {
+            return response.status(400).json({message: 'Error occured'})
+        }
     }
 
     async postback({ params, response }) {
 
         try {
             const click = await Click.findBy('id', params.clickId)
-
-            const campaign = await Campaign.findBy('id', params.campaignId)
-
-            if(click.campaign_id != campaign.id){
-                return response.status(400).json({message: 'Error occured'})
-            }
 
             click.is_lead = true
 
